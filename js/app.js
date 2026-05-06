@@ -92,7 +92,7 @@ function buildDashboard(){
     <div style="display:flex;gap:16px;font-size:12px;color:var(--muted);margin-top:10px;flex-wrap:wrap;">
       <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--green-light);border:1.5px solid var(--green);display:inline-block;"></span>Completed</span>
       <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--primary);display:inline-block;"></span>Current</span>
-      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--bg2);border:1.5px solid var(--border);display:inline-block;"></span>Upcoming</span>
+      <span style="display:flex;align-items:center;gap:6px;"><span style="width:12px;height:12px;border-radius:3px;background:var(--bg2);border:1.5px solid var(--border);display:inline-block;"></span>Incomplete</span>
     </div>
   </div>`;
   updateTopbar();
