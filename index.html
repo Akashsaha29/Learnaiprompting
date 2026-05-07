@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Design Mastery — 45-Day Professional Course</title>
+
+<!-- Supabase -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Fonts -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+
+<!-- SEO -->
+<meta name="description" content="Master AI design tools in 45 days. Free professional course covering Midjourney, ChatGPT Images, Kling, Runway, and more. Build a real portfolio.">
+<meta name="author" content="Akash Saha">
+<meta name="robots" content="index, follow">
+<meta name="theme-color" content="#4F46E5">
+
+<!-- Open Graph (LinkedIn, WhatsApp, Facebook) -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="AI Design Mastery — 45-Day Professional Course">
+<meta property="og:description" content="Master AI design tools in 45 days. Free course with hands-on portfolio projects. Midjourney, ChatGPT Images, Kling, Runway and more.">
+<meta property="og:url" content="https://aidesignmastery.in">
+<meta property="og:site_name" content="AI Design Mastery">
+
+<!-- Twitter Card -->
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="AI Design Mastery — 45-Day Professional Course">
+<meta name="twitter:description" content="Master AI design tools in 45 days. Free course with hands-on portfolio projects.">
+
+<!-- Stylesheet -->
+<link rel="stylesheet" href="css/styles.css">
+
+</head>
+
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div id="auth-guard">
+  <div class="ag-logo">✦</div>
+  <div class="ag-title">AI Design Mastery</div>
+  <div class="ag-sub">Checking session...</div>
+  <div class="ag-spin"></div>
+</div>
+<div id="topbar">
+  <button id="menu-btn" onclick="toggleSidebar()">☰</button>
+  <a class="topbar-brand" onclick="showView('dashboard');return false;" href="#">
+    <div class="brand-dot">✦</div>
+    <span class="brand-text">AI Design Mastery</span>
+  </a>
+  <!-- MAIN NAV LINKS -->
+  <nav class="topnav" id="topnav">
+    <a class="tnav-link active" id="tnav-dashboard" onclick="showView('dashboard');return false;" href="#">🏠 Home</a>
+    <a class="tnav-link" id="tnav-learn" onclick="showView('learn');return false;" href="#">📖 Learn</a>
+    <a class="tnav-link" id="tnav-vocab" onclick="showView('vocab');return false;" href="#">📚 Vocab</a>
+    <a class="tnav-link" id="tnav-builder" onclick="showView('builder');return false;" href="#">⚡ Builder</a>
+    <a class="tnav-link" id="tnav-tools" onclick="showView('tools');return false;" href="#">🛠 Tools</a>
+    <a class="tnav-link" id="tnav-projects" onclick="showView('projects');return false;" href="#">🎯 Projects</a>
+    <a class="tnav-link" id="tnav-saved" onclick="showView('saved');return false;" href="#">★ Saved</a>
+  </nav>
+  <div class="topbar-progress-wrap">
+    <div class="topbar-progress-bar">
+      <div class="topbar-progress-fill" id="topbar-fill" style="width:0%"></div>
+    </div>
+    <span class="topbar-pct" id="topbar-pct">0%</span>
+  </div>
+  <div class="user-menu" id="user-menu" style="display:none">
+    <button class="ua-btn" onclick="toggleUD()" id="ua-btn">
+      <div class="ua-init" id="ua-init">?</div>
+    </button>
+    <div class="ud" id="ud">
+      <div class="ud-name" id="ud-name">Loading...</div>
+      <div class="ud-email" id="ud-email"></div>
+      <div class="ud-div"></div>
+      <button class="ud-item" onclick="showView('saved');toggleUD()">★ Saved Lessons</button>
+      <button class="ud-item" onclick="showView('projects');toggleUD()">🎯 My Projects</button>
+      <div class="ud-div"></div>
+      <button class="ud-item danger" onclick="doLogout()">Sign Out</button>
+    </div>
+  </div>
+</div>
+
+<!-- SIDEBAR -->
+<div id="sidebar">
+  <div class="sidebar-inner" id="sidebar-inner"></div>
+</div>
+<div id="overlay" onclick="closeSidebar()"></div>
+
+<!-- BOTTOM NAV -->
+<div id="bottom-nav">
+  <div class="bnav-row">
+    <button class="bnav-btn active" id="bnav-home" onclick="showView('dashboard')"><div class="bnav-icon">🏠</div>Home</button>
+    <button class="bnav-btn" id="bnav-learn" onclick="showView('learn')"><div class="bnav-icon">📖</div>Learn</button>
+    <button class="bnav-btn" id="bnav-vocab" onclick="showView('vocab')"><div class="bnav-icon">🔤</div>Vocab</button>
+    <button class="bnav-btn" id="bnav-builder" onclick="showView('builder')"><div class="bnav-icon">⚡</div>Builder</button>
+    <button class="bnav-btn" id="bnav-tools" onclick="showView('tools')"><div class="bnav-icon">🛠</div>Tools</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div id="main">
+
+<!-- ═══════ DASHBOARD ═══════ -->
+<div id="dashboard-view">
+  <div id="dash-inner"></div>
+</div>
+
+<!-- ═══════ LEARN ═══════ -->
+<div id="learn-view">
+  <div class="lesson-topbar" id="lesson-tabs-bar"></div>
+  <div class="lesson-content" id="lesson-content-area"></div>
+  <div class="lesson-nav-bar" id="lesson-nav-bar"></div>
+</div>
+
+<!-- ═══════ VOCAB GLOSSARY ═══════ -->
+<div id="vocab-view">
+  <div class="page-header">
+    <h1>📚 Prompt Vocabulary Glossary</h1>
+    <p>Every professional term you need — with visual examples and ready-to-copy prompt usage. Learn what each word actually does to your image.</p>
+  </div>
+  <div class="vocab-search-bar">
+    <span class="search-icon">🔍</span>
+    <input type="text" id="vocab-search" placeholder="Search terms — e.g. Rembrandt, bokeh, editorial..." oninput="filterVocab()">
+  </div>
+
+  <!-- VOCAB HELP PANEL -->
+  <div class="vocab-help-panel" id="vocab-help-panel">
+    <button class="vocab-help-toggle" onclick="toggleVocabHelp()" id="vocab-help-btn">
+      <span class="vhp-icon">💡</span>
+      <span class="vhp-title">How to use this glossary in your prompts</span>
+      <span class="vhp-chevron" id="vhp-chev">▼</span>
+    </button>
+    <div class="vocab-help-body" id="vocab-help-body" style="display:none">
+      <div class="vhp-grid">
+        <div class="vhp-step">
+          <div class="vhp-step-num">1</div>
+          <div class="vhp-step-content">
+            <div class="vhp-step-title">Find your term</div>
+            <div class="vhp-step-desc">Search or browse by category. Each card shows the term, what it means visually, and a ready-to-use example phrase.</div>
+          </div>
+        </div>
+        <div class="vhp-step">
+          <div class="vhp-step-num">2</div>
+          <div class="vhp-step-content">
+            <div class="vhp-step-title">Copy the prompt term</div>
+            <div class="vhp-step-desc">Click "Copy prompt term →" on any card. This copies the professional phrasing directly — not the term name, but how you actually write it in a prompt.</div>
+          </div>
+        </div>
+        <div class="vhp-step">
+          <div class="vhp-step-num">3</div>
+          <div class="vhp-step-content">
+            <div class="vhp-step-title">Layer terms together</div>
+            <div class="vhp-step-desc">Professional prompts combine 4–6 vocabulary layers. One term from Lighting + one from Mood + one from Camera + a Style Reference = a complete visual brief.</div>
+          </div>
+        </div>
+        <div class="vhp-step">
+          <div class="vhp-step-num">4</div>
+          <div class="vhp-step-content">
+            <div class="vhp-step-title">Use the Prompt Builder</div>
+            <div class="vhp-step-desc">Go to ⚡ Builder to assemble terms visually — it combines vocabulary from this glossary into a structured, ready-to-copy prompt automatically.</div>
+          </div>
+        </div>
+      </div>
+      <div class="vhp-formula">
+        <div class="vhp-formula-label">Example — how a professional assembles vocabulary into a prompt:</div>
+        <div class="vhp-formula-prompt">
+          <span class="vhp-token vhp-token-subject">premium wireless headphones on dark marble</span>
+          <span class="vhp-token vhp-token-light">single shaft of tungsten light from upper left</span>
+          <span class="vhp-token vhp-token-mood">quiet luxury, understated elegance</span>
+          <span class="vhp-token vhp-token-camera">Hasselblad medium format, shallow DOF</span>
+          <span class="vhp-token vhp-token-ref">Hermès campaign aesthetic</span>
+          <span class="vhp-token vhp-token-param">--ar 4:5 --v 7</span>
+        </div>
+        <div class="vhp-formula-legend">
+          <span class="vhp-leg"><span class="vhp-dot" style="background:#2563eb"></span>Subject</span>
+          <span class="vhp-leg"><span class="vhp-dot" style="background:#f59e0b"></span>Lighting</span>
+          <span class="vhp-leg"><span class="vhp-dot" style="background:#8b5cf6"></span>Mood</span>
+          <span class="vhp-leg"><span class="vhp-dot" style="background:#10b981"></span>Camera</span>
+          <span class="vhp-leg"><span class="vhp-dot" style="background:#ec4899"></span>Style Ref</span>
+          <span class="vhp-leg"><span class="vhp-dot" style="background:#ef4444"></span>Parameters</span>
+        </div>
+      </div>
+      <div class="vhp-tip">
+        <span style="font-size:16px">💡</span>
+        <div><strong>Pro tip:</strong> Terms in Day 2 lessons are clickable — they bring you here and highlight the exact term so you can read its full definition and copy the professional phrasing.</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="vocab-cat-pills" id="vocab-cats"></div>
+  <div id="vocab-grid-area"></div>
+</div>
+
+<!-- ═══════ PROMPT BUILDER ═══════ -->
+<div id="builder-view">
+  <div class="page-header">
+    <h1>⚡ AI Prompt Studio</h1>
+    <p>Four powerful tools in one place — build, fix, or generate prompts from an image reference.</p>
+  </div>
+
+  <!-- BUILDER TOOL TABS -->
+  <div class="builder-tool-tabs">
+    <button class="btt active" id="btt-visual" onclick="switchBuilderTool('visual')">
+      <span class="btt-icon">🎛</span>
+      <div><div class="btt-title">Image Builder</div><div class="btt-sub">Assemble image prompts</div></div>
+    </button>
+    <button class="btt" id="btt-video" onclick="switchBuilderTool('video')">
+      <span class="btt-icon">🎬</span>
+      <div><div class="btt-title">Video Builder</div><div class="btt-sub">Professional video prompts</div></div>
+    </button>
+    <button class="btt" id="btt-fixer" onclick="switchBuilderTool('fixer')">
+      <span class="btt-icon">🔧</span>
+      <div><div class="btt-title">Prompt Fixer</div><div class="btt-sub">Paste & AI upgrades it</div></div>
+    </button>
+    <button class="btt" id="btt-imgprompt" onclick="switchBuilderTool('imgprompt')">
+      <span class="btt-icon">🖼</span>
+      <div><div class="btt-title">Image → Prompt</div><div class="btt-sub">Upload product/character</div></div>
+    </button>
+  </div>
+
+  <!-- TOOL 1: VISUAL BUILDER -->
+  <div id="btool-visual" class="btool active">
+    <!-- SUBJECT INPUT - the missing piece -->
+    <div class="builder-subject-wrap">
+      <div class="builder-subject-label">
+        <span style="font-size:18px;">🎯</span>
+        <div>
+          <div style="font-size:14px;font-weight:800;color:var(--text);">What is your subject?</div>
+          <div style="font-size:12px;color:var(--muted);">Describe exactly what you're generating — the AI wraps all your style choices around this</div>
+        </div>
+      </div>
+      <input type="text" class="builder-subject-input" id="builder-subject" placeholder="e.g. Boat wireless headphones, premium skincare bottle, 25-year-old woman in silk dress, luxury watch on wet marble..." oninput="updateBuilderPrompt()" />
+      <div class="builder-subject-examples">
+        <span style="font-size:11px;font-weight:700;color:var(--muted);margin-right:6px;">Quick examples:</span>
+        <span class="bsubj-chip" onclick="setSubject('Boat wireless headphones')">🎧 Headphones</span>
+        <span class="bsubj-chip" onclick="setSubject('premium skincare serum bottle')">🧴 Skincare</span>
+        <span class="bsubj-chip" onclick="setSubject('25-year-old Indian woman model')">👤 Model</span>
+        <span class="bsubj-chip" onclick="setSubject('luxury Swiss watch')">⌚ Watch</span>
+        <span class="bsubj-chip" onclick="setSubject('electric sports car')">🚗 Car</span>
+        <span class="bsubj-chip" onclick="setSubject('craft coffee cup latte art')">☕ Coffee</span>
+        <span class="bsubj-chip" onclick="setSubject('modern minimal apartment interior')">🏠 Interior</span>
+      </div>
+    </div>
+    <div class="builder-layout">
+      <div class="builder-steps" id="builder-steps"></div>
+      <div class="builder-panel">
+        <div class="bp-header">
+          <div class="bp-title">Your Prompt (Live)</div>
+          <div class="bp-sub" id="bp-sub-hint">Add your subject above, then select styles below</div>
+        </div>
+        <div class="bp-prompt-live" id="bp-live">
+          <span style="color:#94a3b8;font-style:italic;">Start by typing your subject above, then select your style options...</span>
+        </div>
+        <div class="bp-score">
+          <span class="bp-score-label" id="bp-score-label">Prompt Strength: Start typing ↑</span>
+          <div class="bp-score-dots" id="bp-score-dots">
+            <div class="bp-score-dot"></div><div class="bp-score-dot"></div>
+            <div class="bp-score-dot"></div><div class="bp-score-dot"></div>
+            <div class="bp-score-dot"></div><div class="bp-score-dot"></div>
+            <div class="bp-score-dot"></div>
+          </div>
+        </div>
+        <div class="bp-actions">
+          <button class="bp-copy" onclick="copyBuilderPrompt()">📋 Copy Prompt</button>
+          <button class="bp-clear" onclick="clearBuilder()">↺ Start Over</button>
+        </div>
+        <div class="bp-neg-prompt">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;">Auto-added negative prompt:</div>
+          <div id="bp-neg-display" style="font-size:11px;color:#94a3b8;font-family:monospace;">--no blurry, deformed, text, watermark, low quality</div>
+        </div>
+        <!-- TRY IT PANEL -->
+        <div class="try-it-panel">
+          <div class="try-it-label">🚀 Test this prompt — free image AI tools</div>
+          <div class="try-it-links">
+            <a href="https://nanobanana.org"
+     target="_blank"
+     rel="noopener"
+     class="try-it-btn imagefx">
+    <span class="tib-icon">🆓</span>
+    <span class="tib-name">Nano Banana</span>
+    <span class="tib-tag">Free</span>
+  </a>
+
+  <a href="https://ideogram.ai"
+     target="_blank"
+     rel="noopener"
+     class="try-it-btn ideogram">
+    <span class="tib-icon">✍️</span>
+    <span class="tib-name">Ideogram</span>
+    <span class="tib-tag">Free tier</span>
+  </a>
+
+  <a href="https://app.leonardo.ai"
+     target="_blank"
+     rel="noopener"
+     class="try-it-btn leonardo">
+    <span class="tib-icon">🌄</span>
+    <span class="tib-name">Leonardo AI</span>
+    <span class="tib-tag">Free tier</span>
+  </a>
+
+  <a href="https://firefly.adobe.com"
+     target="_blank"
+     rel="noopener"
+     class="try-it-btn firefly">
+    <span class="tib-icon">🔥</span>
+    <span class="tib-name">Adobe Firefly</span>
+    <span class="tib-tag">Free tier</span>
+  </a>
+
+  <a href="https://gemini.google.com"
+     target="_blank"
+     rel="noopener"
+     class="try-it-btn gemini">
+    <span class="tib-icon">✦</span>
+    <span class="tib-name">Gemini</span>
+    <span class="tib-tag">Free tier</span>
+  </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOL 2: VIDEO BUILDER -->
+  <div id="btool-video" class="btool" style="display:none;">
+
+    <!-- Tool selector: Kling vs Runway -->
+    <div class="video-tool-selector">
+      <div class="vts-label">Choose your video tool:</div>
+      <div class="vts-row">
+        <button class="vts-btn active" id="vts-kling" onclick="setVideoTool('kling')">
+          <span style="font-size:20px;">🎬</span>
+          <div><div class="vts-name">Kling 2.6</div><div class="vts-desc">Best for cinematic, product ads, character physics</div></div>
+        </button>
+        <button class="vts-btn" id="vts-runway" onclick="setVideoTool('runway')">
+          <span style="font-size:20px;">🎥</span>
+          <div><div class="vts-name">Runway Gen-4.5</div><div class="vts-desc">Best for physics-driven motion, product reveals</div></div>
+        </button>
+        <button class="vts-btn" id="vts-veo" onclick="setVideoTool('veo')">
+          <span style="font-size:20px;">🌊</span>
+          <div><div class="vts-name">Veo 3.1</div><div class="vts-desc">Best for structured, realistic scenes with audio</div></div>
+        </button>
+      </div>
+    </div>
+
+    <!-- Mode: TTV vs I2V -->
+    <div class="video-mode-selector">
+      <div class="vts-label">Generation mode:</div>
+      <div class="vts-row">
+        <button class="vts-btn active" id="vmode-ttv" onclick="setVideoMode('ttv')" style="flex:1;">
+          <span style="font-size:20px;">📝</span>
+          <div><div class="vts-name">Text → Video</div><div class="vts-desc">Full scene from scratch — describe everything</div></div>
+        </button>
+        <button class="vts-btn" id="vmode-i2v" onclick="setVideoMode('i2v')" style="flex:1;">
+          <span style="font-size:20px;">🖼→🎬</span>
+          <div><div class="vts-name">Image → Video</div><div class="vts-desc">Animate a still — describe motion only</div></div>
+        </button>
+      </div>
+      <div id="i2v-note" style="display:none;margin-top:8px;padding:10px 14px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;font-size:12px;color:#92400e;">
+        <strong>Image-to-Video Rule:</strong> Never redescribe what's already in the image. Only describe what should MOVE and HOW. The AI reads the image itself.
+      </div>
+    </div>
+
+    <div class="video-builder-layout">
+      <!-- LEFT: Steps -->
+      <div class="video-steps-col">
+
+        <!-- STEP 0: Scene/Subject -->
+        <div class="vb-step-card" id="vbs-scene">
+          <div class="vbs-head">
+            <div class="vbs-num">0</div>
+            <div><div class="vbs-title">Scene & Subject</div><div class="vbs-sub">What are we looking at? Be specific.</div></div>
+          </div>
+          <input type="text" class="builder-subject-input" id="vb-scene" placeholder="e.g. A premium Boat headphone sitting half-buried in desert sand, golden dunes, cinematic..." oninput="updateVideoPrompt()" style="margin-top:8px;" />
+          <div class="builder-subject-examples" style="margin-top:8px;">
+            <span class="bsubj-chip" onclick="setVbScene('Premium wireless headphones half-buried in desert sand, dramatic dunes')">🎧 Product desert</span>
+            <span class="bsubj-chip" onclick="setVbScene('25-year-old woman walking in luxury hotel corridor, confident stride')">👤 Person walk</span>
+            <span class="bsubj-chip" onclick="setVbScene('Luxury perfume bottle on wet black marble, mist rising')">🧴 Product mist</span>
+            <span class="bsubj-chip" onclick="setVbScene('Electric sports car on mountain road at golden hour')">🚗 Car drive</span>
+            <span class="bsubj-chip" onclick="setVbScene('Coffee being poured into cup, slow motion steam rising')">☕ Coffee pour</span>
+          </div>
+        </div>
+
+        <!-- STEP 1: Camera Movement -->
+        <div class="vb-step-card" id="vbs-camera">
+          <div class="vbs-head">
+            <div class="vbs-num">1</div>
+            <div><div class="vbs-title">Camera Movement</div><div class="vbs-sub">Most important parameter — always specify this</div></div>
+          </div>
+          <div class="vbs-warning">⚠️ Missing camera = static, amateur-looking shot. Always name the move.</div>
+          <div class="vbs-options" id="vbs-camera-opts">
+            <div class="vbs-opt" data-step="camera" data-val="slow push-in dolly toward subject" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Push In</div><div class="vbs-opt-tip">Dolly toward — intimacy, reveal, tension</div></div>
+            <div class="vbs-opt" data-step="camera" data-val="slow pull-out dolly away from subject" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Pull Out</div><div class="vbs-opt-tip">Dolly back — isolation, grand reveal</div></div>
+            <div class="vbs-opt" data-step="camera" data-val="smooth lateral tracking shot following subject" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Track</div><div class="vbs-opt-tip">Follow sideways — dynamic, motion</div></div>
+            <div class="vbs-opt" data-step="camera" data-val="slow orbital arc shot circling subject clockwise" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Orbit / Arc</div><div class="vbs-opt-tip">Circle subject — product hero shot</div></div>
+            <div class="vbs-opt" data-step="camera" data-val="drone ascending shot rising above subject" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Drone Rise</div><div class="vbs-opt-tip">Ascend — scale, epic establishing</div></div>
+            <div class="vbs-opt" data-step="camera" data-val="smooth pan left across scene" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Pan Left</div><div class="vbs-opt-tip">Horizontal pan — environment reveal</div></div>
+            <div class="vbs-opt" data-step="camera" data-val="slow tilt up from low angle to sky" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Tilt Up</div><div class="vbs-opt-tip">Low to high — power, heroism</div></div>
+            <div class="vbs-opt" data-step="camera" data-val="static locked-off shot, no camera movement" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Static</div><div class="vbs-opt-tip">No movement — deliberate stillness</div></div>
+            <div class="vbs-opt" data-step="camera" data-val="low angle ground-level shot looking up at subject" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Low Angle</div><div class="vbs-opt-tip">Look up — dominance, power</div></div>
+            <div class="vbs-opt" data-step="camera" data-val="handheld camera with subtle natural shake" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Handheld</div><div class="vbs-opt-tip">Slight shake — authentic, human</div></div>
+          </div>
+        </div>
+
+        <!-- STEP 2: Subject Motion / Physics -->
+        <div class="vb-step-card" id="vbs-motion">
+          <div class="vbs-head">
+            <div class="vbs-num">2</div>
+            <div><div class="vbs-title">Subject Motion & Physics</div><div class="vbs-sub">What moves, how it moves, and where it ends</div></div>
+          </div>
+          <div class="vbs-options" id="vbs-motion-opts">
+            <div class="vbs-opt" data-step="motion" data-val="subject remains completely still, subtle ambient motion only" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Still / Ambient</div><div class="vbs-opt-tip">Floating dust, slight flicker — for product shots</div></div>
+            <div class="vbs-opt" data-step="motion" data-val="fabric and hair moves gently in soft breeze, then settles back into place" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Fabric / Wind</div><div class="vbs-opt-tip">Cloth, hair, flag — use end state to prevent 99% hang</div></div>
+            <div class="vbs-opt" data-step="motion" data-val="liquid pours or splashes with realistic physics, droplets scatter naturally" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Liquid Physics</div><div class="vbs-opt-tip">Pour, splash, drip — Kling excels here</div></div>
+            <div class="vbs-opt" data-step="motion" data-val="character walks forward with confident natural gait, weight and momentum realistic" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Walk / Stride</div><div class="vbs-opt-tip">Realistic walking physics</div></div>
+            <div class="vbs-opt" data-step="motion" data-val="slow motion, 240fps equivalent speed reduction, every detail visible" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Slow Motion</div><div class="vbs-opt-tip">240fps feel — for product impact moments</div></div>
+            <div class="vbs-opt" data-step="motion" data-val="object emerges from surface, rising upward with weight and gravity" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Emerge / Rise</div><div class="vbs-opt-tip">Product rising from sand, water, etc.</div></div>
+            <div class="vbs-opt" data-step="motion" data-val="smoke, mist, or steam rises and drifts slowly, atmospheric volumetric" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Smoke / Mist</div><div class="vbs-opt-tip">Atmospheric particle motion</div></div>
+            <div class="vbs-opt" data-step="motion" data-val="explosion or impact with realistic physical forces, debris scatters with weight" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Impact / Force</div><div class="vbs-opt-tip">Runway excels — describe forces not visuals</div></div>
+          </div>
+          <div style="margin-top:10px;">
+            <div class="vbs-sub" style="margin-bottom:4px;">Custom motion endpoint (prevents 99% hang):</div>
+            <input type="text" class="builder-subject-input" id="vb-endpoint" placeholder='e.g. "...then settles back into place" or "...comes to rest on the surface"' oninput="updateVideoPrompt()" style="font-size:12px;" />
+          </div>
+        </div>
+
+        <!-- STEP 3: Lighting -->
+        <div class="vb-step-card" id="vbs-vlight">
+          <div class="vbs-head">
+            <div class="vbs-num">3</div>
+            <div><div class="vbs-title">Lighting</div><div class="vbs-sub">Same lighting vocabulary as images — critical for mood</div></div>
+          </div>
+          <div class="vbs-options" id="vbs-vlight-opts">
+            <div class="vbs-opt" data-step="vlight" data-val="golden hour warm light, long shadows, warm amber glow" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Golden Hour</div><div class="vbs-opt-tip">Warm, cinematic, lifestyle</div></div>
+            <div class="vbs-opt" data-step="vlight" data-val="dramatic single shaft of light from above, deep shadow 80%, chiaroscuro" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Dramatic Single</div><div class="vbs-opt-tip">Luxury product — one light, deep shadow</div></div>
+            <div class="vbs-opt" data-step="vlight" data-val="neon sign color spill, blue and pink neon reflections on wet surface" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Neon Night</div><div class="vbs-opt-tip">Cyberpunk, urban, editorial</div></div>
+            <div class="vbs-opt" data-step="vlight" data-val="volumetric god rays through fog, atmospheric depth, sun rays visible in air" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Volumetric</div><div class="vbs-opt-tip">God rays, mist — cinematic atmosphere</div></div>
+            <div class="vbs-opt" data-step="vlight" data-val="clean white studio lighting, large softbox, even illumination, no harsh shadows" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Studio Clean</div><div class="vbs-opt-tip">Commercial, product, safe</div></div>
+            <div class="vbs-opt" data-step="vlight" data-val="blue hour twilight, deep blue sky, city lights emerging, cool tones" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Blue Hour</div><div class="vbs-opt-tip">Evening exterior, cinematic</div></div>
+          </div>
+        </div>
+
+        <!-- STEP 4: Style & Mood -->
+        <div class="vb-step-card" id="vbs-vstyle">
+          <div class="vbs-head">
+            <div class="vbs-num">4</div>
+            <div><div class="vbs-title">Cinematic Style & Mood</div><div class="vbs-sub">The visual language and emotional tone</div></div>
+          </div>
+          <div class="vbs-options" id="vbs-vstyle-opts">
+            <div class="vbs-opt" data-step="vstyle" data-val="cinematic film quality, 4K, photorealistic, professional commercial ad" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Commercial Ad</div><div class="vbs-opt-tip">Professional, brand-ready output</div></div>
+            <div class="vbs-opt" data-step="vstyle" data-val="luxury brand aesthetic, Hermès campaign quality, quiet elegance, restrained motion" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Luxury Brand</div><div class="vbs-opt-tip">High-end, premium, slow</div></div>
+            <div class="vbs-opt" data-step="vstyle" data-val="documentary naturalistic, handheld feel, raw authentic emotion, journalistic" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Documentary</div><div class="vbs-opt-tip">Authentic, real, human</div></div>
+            <div class="vbs-opt" data-step="vstyle" data-val="music video aesthetic, rapid cuts implied, energetic motion, bold color, Gen-Z" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Music Video</div><div class="vbs-opt-tip">Energy, bold, social media</div></div>
+            <div class="vbs-opt" data-step="vstyle" data-val="epic film trailer quality, sweeping scale, orchestral energy implied, dramatic tension" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Epic / Trailer</div><div class="vbs-opt-tip">Grand scale, cinematic drama</div></div>
+            <div class="vbs-opt" data-step="vstyle" data-val="minimal clean aesthetic, Kinfolk magazine, Scandinavian lifestyle, breathing room" onclick="selectVbOpt(this)"><div class="vbs-opt-name">Minimal Kinfolk</div><div class="vbs-opt-tip">Clean, slow, lifestyle brand</div></div>
+          </div>
+        </div>
+
+        <!-- STEP 5: Duration & Format -->
+        <div class="vb-step-card" id="vbs-vformat">
+          <div class="vbs-head">
+            <div class="vbs-num">5</div>
+            <div><div class="vbs-title">Duration & Aspect Ratio</div><div class="vbs-sub">Platform and length</div></div>
+          </div>
+          <div class="vbs-options" id="vbs-vformat-opts">
+            <div class="vbs-opt" data-step="vformat" data-val="5 seconds, 16:9 landscape" onclick="selectVbOpt(this)"><div class="vbs-opt-name">5s 16:9</div><div class="vbs-opt-tip">YouTube, web — test clip</div></div>
+            <div class="vbs-opt" data-step="vformat" data-val="10 seconds, 16:9 landscape" onclick="selectVbOpt(this)"><div class="vbs-opt-name">10s 16:9</div><div class="vbs-opt-tip">YouTube, web — full clip</div></div>
+            <div class="vbs-opt" data-step="vformat" data-val="5 seconds, 9:16 vertical" onclick="selectVbOpt(this)"><div class="vbs-opt-name">5s 9:16</div><div class="vbs-opt-tip">Reels, TikTok, Stories</div></div>
+            <div class="vbs-opt" data-step="vformat" data-val="10 seconds, 9:16 vertical" onclick="selectVbOpt(this)"><div class="vbs-opt-name">10s 9:16</div><div class="vbs-opt-tip">Reels, TikTok — full</div></div>
+            <div class="vbs-opt" data-step="vformat" data-val="10 seconds, 1:1 square" onclick="selectVbOpt(this)"><div class="vbs-opt-name">10s 1:1</div><div class="vbs-opt-tip">Instagram feed</div></div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT: Live Prompt Panel -->
+      <div class="builder-panel">
+        <div class="bp-header">
+          <div class="bp-title" id="vb-panel-title">🎬 Video Prompt (Live)</div>
+          <div class="bp-sub" id="vb-panel-sub">Built for <span id="vb-tool-label" style="color:var(--primary);font-weight:800;">Kling 2.6</span> · <span id="vb-mode-label">Text→Video</span></div>
+        </div>
+
+        <div class="bp-prompt-live" id="vb-live">
+          <span style="color:#94a3b8;font-style:italic;">Type your scene above, then select camera and motion to build your prompt...</span>
+        </div>
+
+        <div class="bp-score" style="margin-top:12px;">
+          <span class="bp-score-label" id="vb-score-label">Video Prompt Quality: Start typing ↑</span>
+          <div class="bp-score-dots" id="vb-score-dots">
+            <div class="bp-score-dot"></div><div class="bp-score-dot"></div>
+            <div class="bp-score-dot"></div><div class="bp-score-dot"></div>
+            <div class="bp-score-dot"></div><div class="bp-score-dot"></div>
+          </div>
+        </div>
+
+        <!-- Pro tips box that updates per tool -->
+        <div class="vb-tips-box" id="vb-tips">
+          <div class="vb-tips-title">⚡ Kling 2.6 Pro Tips</div>
+          <ul class="vb-tips-list" id="vb-tips-list"></ul>
+        </div>
+
+        <div class="bp-actions">
+          <button type="button" class="bp-copy" onclick="copyVideoPrompt(event)"> 📋 Copy Video Prompt </button>
+          <button type="button" class="bp-clear" onclick="clearVideoBuilder(event)"> ↺ Reset </button>
+        </div>
+        <div class="try-it-panel" style="margin-top:12px;">
+          <div class="try-it-label">🎬 Test this prompt — free video AI tools</div>
+          <div class="try-it-links">
+            <a href="https://kling.kuaishou.com" target="_blank" rel="noopener" class="try-it-btn kling"><span class="tib-icon">🎬</span><span class="tib-name">Kling 2.6</span><span class="tib-tag">Free tier</span></a>
+            <a href="https://runwayml.com" target="_blank" rel="noopener" class="try-it-btn runway"><span class="tib-icon">🎥</span><span class="tib-name">Runway</span><span class="tib-tag">Free tier</span></a>
+            <a href="https://www.capcut.com" target="_blank" rel="noopener" class="try-it-btn capcut"><span class="tib-icon">✂️</span><span class="tib-name">CapCut</span><span class="tib-tag">Free</span></a>
+            <a href="https://gemini.google.com" target="_blank" rel="noopener" class="try-it-btn gemini"><span class="tib-icon">✦</span><span class="tib-name">Gemini</span><span class="tib-tag">Free</span></a>
+          </div>
+        </div>
+
+        <!-- Negative prompt -->
+        <div class="bp-neg-prompt" style="margin-top:10px;">
+          <div style="font-size:11px;font-weight:700;color:var(--muted);margin-bottom:4px;">Negative prompt (add to Kling's negative field):</div>
+          <div id="vb-neg-display" style="font-size:11px;color:#94a3b8;font-family:monospace;">blurry, static shot, no motion, low quality, distorted limbs, watermark</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOL 3: PROMPT FIXER -->
+  <div id="btool-fixer" class="btool" style="display:none;">
+    <div class="fixer-layout">
+      <div class="fixer-left">
+        <div class="fixer-card">
+          <div class="fixer-card-head">
+            <div class="fixer-icon">📝</div>
+            <div>
+              <div class="fixer-title">Paste Your Prompt</div>
+              <div class="fixer-sub">Beginner or rough prompt — AI rewrites it to professional level</div>
+            </div>
+          </div>
+          <textarea class="fixer-input" id="fixer-input" placeholder="Paste any prompt here — even rough, conversational, or incomplete ones work great.
+
+Example:
+A Black Headphone of Boat is up on the desert 15% of the headphone is inside the sand and the rest is above it. Background: Sand dunes. Camera should be closer and more cinematic. Professional photography. Inspired from the Mummy movie.
+
+The AI will rewrite this into a professional-grade prompt."></textarea>
+          <button class="fixer-btn" id="fixer-btn" onclick="runPromptFixer()">🔧 Fix & Upgrade My Prompt</button>
+        </div>
+      </div>
+      <div class="fixer-right">
+        <div class="fixer-result-card" id="fixer-result-card">
+          <div class="fixer-result-head">
+            <div class="fixer-result-icon">✨</div>
+            <div>
+              <div class="fixer-title">Upgraded Prompt</div>
+              <div class="fixer-sub">Professional-grade output ready to use</div>
+            </div>
+          </div>
+          <div class="fixer-placeholder" id="fixer-placeholder">
+            <div style="font-size:36px;margin-bottom:12px;">🔧</div>
+            <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">Paste a prompt on the left</div>
+            <div style="font-size:13px;color:var(--muted);">The AI will rewrite it professionally and explain every change it made.</div>
+          </div>
+          <div id="fixer-output" style="display:none;">
+            <div class="fixer-upgraded-prompt" id="fixer-upgraded-text"></div>
+            <button class="ref-copy" style="margin-top:10px;width:100%;padding:10px;" id="fixer-copy-btn" onclick="copyFixedPrompt()">📋 Copy Upgraded Prompt</button>
+            <div class="fixer-explanation" id="fixer-explanation"></div>
+              </div>
+        </div>
+         <!-- TRY IT PANEL -->
+        <div class="try-it-panel">
+          <div class="try-it-label">🚀 Test this prompt — free image AI tools</div>
+          <div class="try-it-links">
+            <a href="https://nanobanana.org" target="_blank" rel="noopener" class="try-it-btn imagefx">
+              <span class="tib-icon">🆓</span><span class="tib-name">Nano Banana</span><span class="tib-tag">Free</span>
+            </a>
+            <a href="https://ideogram.ai" target="_blank" rel="noopener" class="try-it-btn ideogram">
+              <span class="tib-icon">✍️</span><span class="tib-name">Ideogram</span><span class="tib-tag">Free tier</span>
+            </a>
+            <a href="https://app.leonardo.ai" target="_blank" rel="noopener" class="try-it-btn leonardo">
+              <span class="tib-icon">🌄</span><span class="tib-name">Leonardo AI</span><span class="tib-tag">Free tier</span>
+            </a>
+            <a href="https://firefly.adobe.com" target="_blank" rel="noopener" class="try-it-btn firefly">
+              <span class="tib-icon">🔥</span><span class="tib-name">Adobe Firefly</span><span class="tib-tag">Free tier</span>
+            </a>
+            <a href="https://gemini.google.com" target="_blank" rel="noopener" class="try-it-btn gemini">
+               <span class="tib-icon">✦</span><span class="tib-name">Gemini</span><span class="tib-tag">Free tier</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TOOL 3: IMAGE → PROMPT -->
+  <div id="btool-imgprompt" class="btool" style="display:none;">
+  <div class="imgp-layout">
+    <div class="imgp-left">
+      <div class="fixer-card">
+        <div class="fixer-card-head">
+          <div class="fixer-icon">🖼</div>
+            <div>
+              <div class="fixer-title">Upload Your Image</div>
+              <div class="fixer-sub">Product, character, reference photo, or any visual</div>
+            </div>
+        </div>
+
+          <div class="drop-zone" id="imgp-dz" ondragover="dzOver2(event)" ondragleave="dzLeave2()" ondrop="dzDrop2(event)">
+            <input type="file" id="imgp-fi" accept="image/*" onchange="imgpFile(event)" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
+            <div class="drop-icon">📥</div>
+            <div class="drop-title">Drop product/character image here</div>
+            <div class="drop-sub">PNG, JPG, WEBP · Click or drag & drop</div>
+          </div>
+          <div class="img-preview-box" id="imgp-preview-box">
+            <img id="imgp-preview-img" src="" alt="Preview">
+            <button class="remove-img" onclick="rmImgP()">✕ Remove</button>
+          </div>
+
+          <div style="margin-top:14px;">
+            <div class="submit-label" style="font-size:12px;font-weight:800;margin-bottom:8px;">What do you want to do with this image?</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;" id="imgp-mode-grid">
+              <button class="imgp-mode-card" data-mode="recreate" onclick="setImgpMode(this)">
+                <div style="font-size:22px;margin-bottom:4px;">🔁</div>
+                <div style="font-size:12px;font-weight:800;color:var(--text);">Recreate It</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Write a prompt to reproduce this image</div>
+              </button>
+              <button class="imgp-mode-card" data-mode="adscene" onclick="setImgpMode(this)">
+                <div style="font-size:22px;margin-bottom:4px;">🎬</div>
+                <div style="font-size:12px;font-weight:800;color:var(--text);">Place in Ad Scene</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Use this product in a new cinematic setting</div>
+              </button>
+              <button class="imgp-mode-card active" data-mode="both" onclick="setImgpMode(this)">
+                <div style="font-size:22px;margin-bottom:4px;">✨</div>
+                <div style="font-size:12px;font-weight:800;color:var(--primary);">Both Versions</div>
+                <div style="font-size:10px;color:var(--primary);margin-top:2px;">Recreate + Ad Scene (recommended)</div>
+              </button>
+              <button class="imgp-mode-card" data-mode="vocab" onclick="setImgpMode(this)">
+                <div style="font-size:22px;margin-bottom:4px;">📚</div>
+                <div style="font-size:12px;font-weight:800;color:var(--text);">Analyze Vocabulary</div>
+                <div style="font-size:10px;color:var(--muted);margin-top:2px;">Learn what design terms describe this image</div>
+              </button>
+            </div>
+          </div>
+
+          <div style="margin-top:12px;">
+            <div class="submit-label">Additional context (optional)</div>
+            <textarea class="submit-textarea" id="imgp-context" style="min-height:60px;" placeholder="e.g. This is a Boat headphone product. I want it in a desert cinematic scene like The Mummy movie. Target: luxury outdoor ad."></textarea>
+          </div>
+         <!-- <input type="file" id="image-input" accept="image/*" /> -->
+          <button class="fixer-btn" id="imgp-btn" onclick="generateImagePrompt()" style="background:linear-gradient(135deg,var(--purple),#a855f7);">🖼 Generate Prompt from Image</button>
+        </div>
+      </div>
+      <div class="imgp-right">
+      <div class="fixer-result-card" id="imgp-result-card">
+
+      <!-- HEADER -->
+      <div class="fixer-result-head">
+        <div class="fixer-result-icon">⚡</div>
+        <div>
+          <div class="fixer-title">Generated Prompt(s)</div>
+          <div class="fixer-sub">Ready to paste into Midjourney, ChatGPT Images, or Kling</div>
+        </div>
+      </div>
+         <!-- ✅ RESULT WILL COME HERE -->
+      <div id="imgp-result"></div>  
+
+      <!-- ✅ PLACEHOLDER -->
+      <div class="fixer-placeholder" id="imgp-placeholder">
+        <div style="font-size:36px;margin-bottom:12px;">🖼</div>
+        <div style="font-size:14px;font-weight:700;color:var(--text);margin-bottom:6px;">
+          Upload an image on the left
+        </div>
+        <div style="font-size:13px;color:var(--muted);">
+          The AI will analyze your product or character and write professional prompts based on what it sees.
+        </div>
+      </div>
+      </div>
+      <div class="try-it-panel" style="margin:12px 0 0;">
+        <div class="try-it-label">🚀 Generate from this prompt — free image AI</div>
+        <div class="try-it-links">
+          <a href="https://nanobanana.org" target="_blank" rel="noopener" class="try-it-btn imagefx"><span class="tib-icon">🆓</span><span class="tib-name">Nano Banana</span><span class="tib-tag">Free</span></a>
+          <a href="https://ideogram.ai" target="_blank" rel="noopener" class="try-it-btn ideogram"><span class="tib-icon">✍️</span><span class="tib-name">Ideogram</span><span class="tib-tag">Free tier</span></a>
+          <a href="https://app.leonardo.ai" target="_blank" rel="noopener" class="try-it-btn leonardo"><span class="tib-icon">🌄</span><span class="tib-name">Leonardo AI</span><span class="tib-tag">Free tier</span></a>
+          <a href="https://gemini.google.com" target="_blank" rel="noopener" class="try-it-btn gemini"><span class="tib-icon">✦</span><span class="tib-name">Gemini</span><span class="tib-tag">Free</span></a>
+        </div>
+      </div>
+      </div>
+  </div>
+</div>
+</div>
+
+<!-- ═══════ TOOLS ═══════ -->
+<div id="tools-view">
+  <div class="page-header">
+    <h1>🛠 Your AI Tool Stack</h1>
+    <p>Every tool used across 45 days — all are <strong>external platforms</strong> you visit via their own website. Click <strong>↗</strong> on any card to open it directly.</p>
+  </div>
+  <div class="tools-cost-legend">
+    <div class="tcl-item"><span class="tc-badge free">Free</span><span class="tcl-desc">Completely free — no subscription needed</span></div>
+    <div class="tcl-item"><span class="tc-badge both">Free + Paid</span><span class="tcl-desc">Has a free tier — paid plan unlocks more features</span></div>
+    <div class="tcl-item"><span class="tc-badge paid">Paid</span><span class="tcl-desc">Requires a paid subscription to use</span></div>
+  </div>
+  <div class="tools-filter" id="tools-filter"></div>
+  <div class="tools-grid" id="tools-grid"></div>
+</div>
+
+<!-- ═══════ PROJECTS ═══════ -->
+<div id="projects-view" style="padding:40px 40px 100px; max-width:1100px;">
+  <div class="page-header">
+    <h1>🎯 Your 20 Portfolio Projects</h1>
+    <p>10 Poster Ads + 10 Video Ads. Each project links to the lesson day with full references and inspiration.</p>
+  </div>
+  <div class="projects-tabs" id="proj-tabs"></div>
+  <div class="projects-grid" id="projects-grid"></div>
+</div>
+
+<!-- ═══════ SAVED ═══════ -->
+<div id="saved-view">
+  <div class="page-header">
+    <h1>★ Saved Lessons</h1>
+    <p>Your bookmarked lessons for quick access.</p>
+  </div>
+  <div id="saved-content"></div>
+</div>
+
+</div><!-- end #main -->
+
+
+  <!-- Application Scripts -->
+  <script src="js/data.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
