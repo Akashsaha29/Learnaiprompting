@@ -1,7 +1,17 @@
-/* ═══════════════════════════════════════════════════════════
-   AI Design Mastery — styles.css
-   Course platform styles
-═══════════════════════════════════════════════════════════ */
+/*!
+ * AI Design Mastery — 45-Day AI Prompt & Design Course
+ * Copyright © 2025 Akash Saha. All rights reserved.
+ * Website : https://akashsaha29.github.io
+ *
+ * Unauthorised copying, modification, distribution or use of this
+ * software without prior written permission is strictly prohibited.
+ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   styles.css — AI Design Mastery Course Application Styles
+   Used by: app.html
+───────────────────────────────────────────────────────────────────────────── */
+
 /* ════ AUTH GUARD ════ */
 #auth-guard{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
 .ag-logo{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--purple));display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;margin-bottom:4px;}
