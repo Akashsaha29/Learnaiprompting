@@ -1,7 +1,7 @@
-/* © 2026 Akash Saha. AI Design Mastery. All rights reserved. */
-
-
-
+/* ═══════════════════════════════════════════════════════════
+   AI Design Mastery — styles.css
+   Course platform styles
+═══════════════════════════════════════════════════════════ */
 /* ════ AUTH GUARD ════ */
 #auth-guard{position:fixed;inset:0;background:var(--bg);z-index:9999;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:12px;}
 .ag-logo{width:52px;height:52px;border-radius:14px;background:linear-gradient(135deg,var(--primary),var(--purple));display:flex;align-items:center;justify-content:center;font-size:22px;color:#fff;margin-bottom:4px;}
@@ -351,7 +351,9 @@ body {
 /* ════════════════════════════════
    LEARN VIEW
 ════════════════════════════════ */
-#learn-view { display:none; min-height:100vh; }
+.lesson-panel{
+  scroll-margin-top: calc(var(--topbar-h) + 16px);
+}
 
 .lesson-topbar {
   background:var(--white); border-bottom:1px solid var(--border);
@@ -587,6 +589,25 @@ body {
 }
 .assign-title { font-size:18px; font-weight:800; color:var(--text); }
 .assign-desc { font-size:14px; color:var(--text2); line-height:1.7; margin-bottom:20px; }
+.assign-intro { font-size:14px; color:var(--text2); line-height:1.7; margin-bottom:16px; }
+.assign-examples-block { margin-bottom:20px; }
+.assign-example {
+  border-radius:10px; padding:14px 18px; margin-bottom:12px; font-size:13.5px; line-height:1.75;
+}
+.good-example {
+  background:#f0fdf4; border:1.5px solid #bbf7d0; color:#14532d;
+}
+.bad-example {
+  background:#fff1f2; border:1.5px solid #fecdd3; color:#7f1d1d;
+}
+.example-label {
+  font-size:12px; font-weight:800; letter-spacing:0.04em;
+  text-transform:uppercase; margin-bottom:8px;
+  display:flex; align-items:center; gap:6px;
+}
+.good-example .example-label { color:#16a34a; }
+.bad-example .example-label  { color:#dc2626; }
+.example-body { font-size:13.5px; line-height:1.75; }
 
 .deliverables-grid { display:flex; flex-direction:column; gap:8px; margin-bottom:24px; }
 .deliverable-row {
@@ -667,6 +688,68 @@ body {
 .drop-icon { font-size:36px; margin-bottom:8px; }
 .drop-title { font-size:14px; font-weight:700; color:var(--text); margin-bottom:4px; }
 .drop-sub { font-size:12px; color:var(--muted); }
+/* ─── MULTI-IMAGE UPLOAD UI ──────────────────────────────────── */
+.multi-upload-zone {
+  border:2px dashed var(--border2); border-radius:var(--radius);
+  background:var(--bg); transition:all 0.2s; overflow:hidden;
+  position:relative;
+}
+.multi-upload-zone.over { border-color:var(--primary); background:var(--primary-light); }
+.multi-upload-zone.has-images { border-style:solid; border-color:var(--border); }
+.multi-imgs-grid {
+  display:grid; grid-template-columns:repeat(5,1fr); gap:8px;
+  padding:12px;
+}
+.multi-img-cell {
+  position:relative; padding-bottom:100%; border-radius:8px; overflow:hidden;
+  border:1.5px solid var(--border); background:var(--bg2);
+  cursor:pointer; transition:border-color 0.2s;
+}
+.multi-img-cell:hover { border-color:var(--primary); }
+.multi-img-cell img {
+  position:absolute; inset:0; width:100%; height:100%; object-fit:cover;
+}
+.multi-img-cell .cell-remove {
+  position:absolute; top:4px; right:4px; width:22px; height:22px;
+  background:rgba(0,0,0,0.65); color:#fff; border:none; border-radius:50%;
+  cursor:pointer; font-size:10px; display:flex; align-items:center; justify-content:center;
+  opacity:0; transition:opacity 0.15s; z-index:2;
+}
+.multi-img-cell:hover .cell-remove { opacity:1; }
+.multi-img-cell .cell-add {
+  position:absolute; inset:0; display:flex; flex-direction:column;
+  align-items:center; justify-content:center; gap:4px;
+  color:var(--muted); font-size:10px; font-weight:600;
+}
+.multi-img-cell .cell-add span { font-size:22px; color:var(--border2); line-height:1; }
+.multi-img-cell.add-slot {
+  border:2px dashed var(--border2); background:var(--bg);
+  cursor:pointer; transition:all 0.2s;
+}
+.multi-img-cell.add-slot:hover {
+  border-color:var(--primary); background:var(--primary-light);
+}
+.multi-img-cell.add-slot:hover .cell-add { color:var(--primary); }
+.multi-img-cell.add-slot:hover .cell-add span { color:var(--primary); }
+.multi-upload-empty {
+  padding:28px 20px; text-align:center; position:relative; cursor:pointer;
+}
+.multi-upload-footer {
+  border-top:1px solid var(--border); padding:8px 14px;
+  display:flex; align-items:center; justify-content:space-between;
+  background:var(--bg2); font-size:12px; color:var(--muted);
+}
+.multi-upload-footer .add-more-btn {
+  display:flex; align-items:center; gap:5px;
+  background:var(--primary); color:#fff; border:none;
+  border-radius:6px; padding:5px 12px; font-size:12px; font-weight:700;
+  cursor:pointer; position:relative; overflow:hidden;
+}
+.multi-upload-footer .add-more-btn input {
+  position:absolute; inset:0; opacity:0; cursor:pointer; width:100%; height:100%;
+  z-index:2;
+}
+
 
 .img-preview-box {
   display:none; border-radius:var(--radius); overflow:hidden;
