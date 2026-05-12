@@ -1,5 +1,129 @@
-/* © 2026 Akash Saha. AI Design Mastery. All rights reserved. */
-
+/* ═══════════════════════════════════════════════════════════
+   AI Design Mastery — app.js
+   All UI functions, auth, and app boot
+═══════════════════════════════════════════════════════════ */
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  SIDEBAR BUILD                                                   ║
+// ╚══════════════════════════════════════════════════════════════════╝
+function getVideoThumb(title) {
+  const map = {
+    'How AI Image Generation Actually Works': 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=320&h=180&fit=crop&auto=format&q=80',
+    'Midjourney Prompt Masterclass — Beginners': 'https://images.unsplash.com/photo-1636690581110-a512fed05613?w=320&h=180&fit=crop&auto=format&q=80',
+    'Nano Banana Full Tutorial (Free AI)': 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=320&h=180&fit=crop&auto=format&q=80',
+    'The Prompt Formula That Changes Everything': 'https://images.unsplash.com/photo-1655720828018-edd2daec9349?w=320&h=180&fit=crop&auto=format&q=80',
+    'Every Visual Style You Need for AI Design': 'https://images.unsplash.com/photo-1541014741259-de529411b96a?w=320&h=180&fit=crop&auto=format&q=80',
+    'Lighting Terms That Transform Your Prompts': 'https://images.unsplash.com/photo-1516035069371-29a1b244cc32?w=320&h=180&fit=crop&auto=format&q=80',
+    '50 Midjourney Style Aesthetic Words That Work': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=320&h=180&fit=crop&auto=format&q=80',
+    'Aspect Ratios — When to Use Each': 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=320&h=180&fit=crop&auto=format&q=80',
+    'Kling 2.6 Full Tutorial — 2025 Guide': 'https://images.unsplash.com/photo-1536240478700-b869ad10a2ab?w=320&h=180&fit=crop&auto=format&q=80',
+    'Runway Gen 4 Motion Brush Masterclass': 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=320&h=180&fit=crop&auto=format&q=80',
+    '5 Camera Moves That Make AI Video Cinematic': 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=320&h=180&fit=crop&auto=format&q=80',
+    'Image to Video — Midjourney + Kling Workflow': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=320&h=180&fit=crop&auto=format&q=80',
+    'How to Build a Consistent AI Brand Identity': 'https://images.unsplash.com/photo-1541462608143-67571c6738dd?w=320&h=180&fit=crop&auto=format&q=80',
+    'Midjourney Seed & Sref for Brand Consistency': 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=320&h=180&fit=crop&auto=format&q=80',
+    'Creating Brand Mood Boards with AI': 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=320&h=180&fit=crop&auto=format&q=80',
+    'Ideogram 2.0 Full Tutorial — Text in AI Images': 'https://images.unsplash.com/photo-1507925921958-8a62f3d1a50d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Adobe Firefly Text Effects Masterclass': 'https://images.unsplash.com/photo-1609921141835-710b7fa6e438?w=320&h=180&fit=crop&auto=format&q=80',
+    'AI Poster Design From Prompt to Print': 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Full AI Ad Pipeline — Midjourney to Final Video': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=320&h=180&fit=crop&auto=format&q=80',
+    'ElevenLabs Full Voice Tutorial 2025': 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=320&h=180&fit=crop&auto=format&q=80',
+    'CapCut Pro Editing for AI Videos': 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=320&h=180&fit=crop&auto=format&q=80',
+    'How to Build an AI Prompt Library': 'https://images.unsplash.com/photo-1512486130939-2c4f79935e4f?w=320&h=180&fit=crop&auto=format&q=80',
+    '20 Prompt Templates That Save Hours': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=320&h=180&fit=crop&auto=format&q=80',
+    'Midjourney v8 Everything New — Full Breakdown': 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=320&h=180&fit=crop&auto=format&q=80',
+    '--sref Style Reference Mastery': 'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?w=320&h=180&fit=crop&auto=format&q=80',
+    'Midjourney Permutations & Batch Prompts': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=320&h=180&fit=crop&auto=format&q=80',
+    'Consistent Characters in Midjourney': 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=320&h=180&fit=crop&auto=format&q=80',
+    'Nano Banana Pro Full Tutorial — 2026': 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=320&h=180&fit=crop&auto=format&q=80',
+    'Adobe Firefly Generative Fill Masterclass': 'https://images.unsplash.com/photo-1611532736597-de2d4265fba3?w=320&h=180&fit=crop&auto=format&q=80',
+    'Nano Banana vs Midjourney — Which for Client Work?': 'https://images.unsplash.com/photo-1593642632559-0c6d3fc62b89?w=320&h=180&fit=crop&auto=format&q=80',
+    'Fashion Editorial AI Masterclass': 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=320&h=180&fit=crop&auto=format&q=80',
+    'Creating Consistent AI Models for Campaigns': 'https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=320&h=180&fit=crop&auto=format&q=80',
+    'Photoshop AI — Remove Background & Composite': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=320&h=180&fit=crop&auto=format&q=80',
+    'AI Product Photography Full Tutorial': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=320&h=180&fit=crop&auto=format&q=80',
+    'Nano Banana Pro for Product Shots — Complete Guide': 'https://images.unsplash.com/photo-1585386959984-a4155224a1ad?w=320&h=180&fit=crop&auto=format&q=80',
+    'Tech Brand Ad Photography Breakdown': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=320&h=180&fit=crop&auto=format&q=80',
+    'Background Staging for AI Product Shots': 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=320&h=180&fit=crop&auto=format&q=80',
+    'How to Prompt Luxury Brand Aesthetics': 'https://images.unsplash.com/photo-1441986300917-64674bd600d8?w=320&h=180&fit=crop&auto=format&q=80',
+    'Hermès, Chanel, Bottega — Visual Language Breakdown': 'https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=320&h=180&fit=crop&auto=format&q=80',
+    'The Color Palette of Luxury — Psychology': 'https://images.unsplash.com/photo-1513519245088-0e12902e35a6?w=320&h=180&fit=crop&auto=format&q=80',
+    'Food Photography AI Prompts — Pro Results Every Time': 'https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=320&h=180&fit=crop&auto=format&q=80',
+    'Restaurant Brand Photography with Midjourney': 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=320&h=180&fit=crop&auto=format&q=80',
+    'Plating & Food Styling Vocabulary for AI': 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=320&h=180&fit=crop&auto=format&q=80',
+    'Architecture Photography AI — Pro Interior & Exterior': 'https://images.unsplash.com/photo-1486325212027-8081e485255e?w=320&h=180&fit=crop&auto=format&q=80',
+    'Interior Design AI — Mood Board to Final Image': 'https://images.unsplash.com/photo-1618221195710-dd6b41faaea6?w=320&h=180&fit=crop&auto=format&q=80',
+    'Ideogram 2.0 Complete Tutorial — Text in AI Images': 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=320&h=180&fit=crop&auto=format&q=80',
+    'AI Poster Design System — From Brief to Final': 'https://images.unsplash.com/photo-1626785774573-4b799315345d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Typography Rules Every AI Designer Must Know': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Sports Photography AI — Motion, Energy & Nike Aesthetic': 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=320&h=180&fit=crop&auto=format&q=80',
+    'Action & Motion Blur Photography Prompts': 'https://images.unsplash.com/photo-1543332164-6e82f355badc?w=320&h=180&fit=crop&auto=format&q=80',
+    'Beauty Photography AI — Skin, Makeup & Product': 'https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?w=320&h=180&fit=crop&auto=format&q=80',
+    'Luxury Beauty Campaign Photography with AI': 'https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=320&h=180&fit=crop&auto=format&q=80',
+    'Healthcare Brand Photography — Trust & Warmth': 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Adobe Firefly for Healthcare — Commercial Safe AI': 'https://images.unsplash.com/photo-1559757175-5700dde675bc?w=320&h=180&fit=crop&auto=format&q=80',
+    'Kling 2.6 Complete Beginner to Pro Guide 2025': 'https://images.unsplash.com/photo-1536240478700-b869ad10a2ab?w=320&h=180&fit=crop&auto=format&q=80',
+    'Runway Gen-4.5 Full Tutorial — Every Feature': 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=320&h=180&fit=crop&auto=format&q=80',
+    'AI Video vs Real Video — Can You Tell the Difference?': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=320&h=180&fit=crop&auto=format&q=80',
+    'The 4-Part Video Prompt Formula That Actually Works': 'https://images.unsplash.com/photo-1561736778-92e52a7769ef?w=320&h=180&fit=crop&auto=format&q=80',
+    'Every Camera Movement Explained — Filmmaking 101': 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=320&h=180&fit=crop&auto=format&q=80',
+    'AI Video Camera Control — Kling Orbital Shots': 'https://images.unsplash.com/photo-1500634245200-e5245c7574ef?w=320&h=180&fit=crop&auto=format&q=80',
+    'Runway Director Mode — Camera Control Deep Dive': 'https://images.unsplash.com/photo-1536240478700-b869ad10a2ab?w=320&h=180&fit=crop&auto=format&q=80',
+    'Kling 2.6 Advanced Features — Everything New': 'https://images.unsplash.com/photo-1489599849927-2ee91cede3ba?w=320&h=180&fit=crop&auto=format&q=80',
+    'Kling Elements Feature — Consistent Characters': 'https://images.unsplash.com/photo-1531746020798-e6953c6e8e04?w=320&h=180&fit=crop&auto=format&q=80',
+    'Kling 2.6 Physics — Fabric, Liquid, Fire Mastery': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=320&h=180&fit=crop&auto=format&q=80',
+    'Image to Video — Kling Professional Workflow': 'https://images.unsplash.com/photo-1517430816045-df4b7de11d1d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Runway Gen-4.5 Everything New — Physics & Director Mode': 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Runway vs Kling — Which for Commercial Work?': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=320&h=180&fit=crop&auto=format&q=80',
+    'Runway Motion Brush Deep Dive': 'https://images.unsplash.com/photo-1536240478700-b869ad10a2ab?w=320&h=180&fit=crop&auto=format&q=80',
+    'Fashion Video Ad — AI Campaign Production 2025': 'https://images.unsplash.com/photo-1509631179647-0177331693ae?w=320&h=180&fit=crop&auto=format&q=80',
+    'Kling 2.6 Fashion & Model Physics Masterclass': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=320&h=180&fit=crop&auto=format&q=80',
+    'Product Launch Video AI — Commercial Workflow 2025': 'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=320&h=180&fit=crop&auto=format&q=80',
+    'E-Commerce Video Ads That Convert — AI Production': 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=320&h=180&fit=crop&auto=format&q=80',
+    'Google Veo 3 — Complete Guide to Prompting & Audio': 'https://images.unsplash.com/photo-1573804633927-bfcbcd909acd?w=320&h=180&fit=crop&auto=format&q=80',
+    'Veo 3 vs Kling vs Runway — Which Wins for Commercial Work?': 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=320&h=180&fit=crop&auto=format&q=80',
+    'AI Video with Synchronized Audio — Veo 3 AudioGen': 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=320&h=180&fit=crop&auto=format&q=80',
+    'Fitness Brand Reel AI — Nike Adidas Energy Level': 'https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?w=320&h=180&fit=crop&auto=format&q=80',
+    'High Energy Sports Video Prompts — Motion Language': 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=320&h=180&fit=crop&auto=format&q=80',
+    'HeyGen Complete Tutorial — AI Spokesperson 2025': 'https://images.unsplash.com/photo-1563207153-f403bf289096?w=320&h=180&fit=crop&auto=format&q=80',
+    'ElevenLabs + HeyGen — Full Ad Production Workflow': 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=320&h=180&fit=crop&auto=format&q=80',
+    'Cinematic Brand Story — AI Narrative Filmmaking': 'https://images.unsplash.com/photo-1485846234645-a62644f84728?w=320&h=180&fit=crop&auto=format&q=80',
+    'Brand Storytelling Framework — The 3-Act Structure for Ads': 'https://images.unsplash.com/photo-1457369804613-52c61a468e7d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Logo Animation AI — Kling + CapCut Workflow': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=320&h=180&fit=crop&auto=format&q=80',
+    'Explainer Video AI — Script to Final in 1 Hour': 'https://images.unsplash.com/photo-1518770660439-4636190af475?w=320&h=180&fit=crop&auto=format&q=80',
+    'Beat-Sync Video Editing — CapCut Pro Complete Guide': 'https://images.unsplash.com/photo-1514320291840-2e0a9bf2a9ae?w=320&h=180&fit=crop&auto=format&q=80',
+    'Suno AI Music for Brand Videos — Full Workflow': 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Brand Identity System — Complete AI Workflow 2025': 'https://images.unsplash.com/photo-1541462608143-67571c6738dd?w=320&h=180&fit=crop&auto=format&q=80',
+    'What Makes a Brand System — Not Just a Logo': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=320&h=180&fit=crop&auto=format&q=80',
+    'Color Theory for Designers — Complete Foundation': 'https://images.unsplash.com/photo-1513519245088-0e12902e35a6?w=320&h=180&fit=crop&auto=format&q=80',
+    'Brand Color Psychology — Why Colors Make You Buy': 'https://images.unsplash.com/photo-1541014741259-de529411b96a?w=320&h=180&fit=crop&auto=format&q=80',
+    'Typography for Non-Designers — Complete Foundation': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Brand Typography System — Choosing and Pairing Fonts': 'https://images.unsplash.com/photo-1609921141835-710b7fa6e438?w=320&h=180&fit=crop&auto=format&q=80',
+    'Logo Design with AI — Professional Process 2025': 'https://images.unsplash.com/photo-1561070791-2526d30994b5?w=320&h=180&fit=crop&auto=format&q=80',
+    'Social Media Content System — AI Brand Strategy 2025': 'https://images.unsplash.com/photo-1611162617474-5b21e879e113?w=320&h=180&fit=crop&auto=format&q=80',
+    'Figma — Design System at Scale': 'https://images.unsplash.com/photo-1542744094-24638eff58bb?w=320&h=180&fit=crop&auto=format&q=80',
+    'Packaging Design AI — Concept to 3D Mockup': 'https://images.unsplash.com/photo-1553062407-98eeb64c6a62?w=320&h=180&fit=crop&auto=format&q=80',
+    'Dieline Packaging Design Principles for AI Designers': 'https://images.unsplash.com/photo-1583947215259-38e31be8751f?w=320&h=180&fit=crop&auto=format&q=80',
+    'Motion Design Principles — 12 Rules of Animation for Brands': 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=320&h=180&fit=crop&auto=format&q=80',
+    'Brand Motion Design — AI + CapCut Workflow': 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=320&h=180&fit=crop&auto=format&q=80',
+    'How to Present Brand Identity to Clients — Professional': 'https://images.unsplash.com/photo-1542744173-8e7e53415bb0?w=320&h=180&fit=crop&auto=format&q=80',
+    'Brand Guidelines Document — What to Include': 'https://images.unsplash.com/photo-1512486130939-2c4f79935e4f?w=320&h=180&fit=crop&auto=format&q=80',
+    'AI Designer Portfolio Strategy — What Clients Actually Want': 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=320&h=180&fit=crop&auto=format&q=80',
+    'Portfolio Mistakes to Avoid — What Kills Your Chances': 'https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?w=320&h=180&fit=crop&auto=format&q=80',
+    'How to Write a Design Case Study — Portfolio Writing': 'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=320&h=180&fit=crop&auto=format&q=80',
+    'Case Study Examples That Get Designers Hired': 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=320&h=180&fit=crop&auto=format&q=80',
+    'Framer Portfolio Website — Complete Build in 2025': 'https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?w=320&h=180&fit=crop&auto=format&q=80',
+    'AI Portfolio Site — Framer + AI Tools Workflow': 'https://images.unsplash.com/photo-1498049794561-7780e7231661?w=320&h=180&fit=crop&auto=format&q=80',
+    'Pricing Creative Work — The Definitive Guide': 'https://images.unsplash.com/photo-1554224155-6726b3ff858f?w=320&h=180&fit=crop&auto=format&q=80',
+    'AI Designer Rates — What to Charge in 2025': 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?w=320&h=180&fit=crop&auto=format&q=80',
+    'How to Write a Creative Proposal — Win Clients': 'https://images.unsplash.com/photo-1455165814004-1126a7199f9b?w=320&h=180&fit=crop&auto=format&q=80',
+    'Client Discovery Call — The 5 Questions That Win Projects': 'https://images.unsplash.com/photo-1556761175-4b46a572b786?w=320&h=180&fit=crop&auto=format&q=80',
+    'Managing Your First Design Client — Everything You Need to Know': 'https://images.unsplash.com/photo-1521737711867-e3b97375f902?w=320&h=180&fit=crop&auto=format&q=80',
+    'Client Feedback Handling — How to Not Lose Your Mind': 'https://images.unsplash.com/photo-1542744173-05336fcc7ad4?w=320&h=180&fit=crop&auto=format&q=80',
+    'Design Showreel — How to Create a Portfolio Reel That Gets Work': 'https://images.unsplash.com/photo-1492619375914-88005aa9e8fb?w=320&h=180&fit=crop&auto=format&q=80',
+    'CapCut Pro Showreel Editing — Complete Workflow': 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=320&h=180&fit=crop&auto=format&q=80',
+  };
+  return map[title] || 'https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?w=320&h=180&fit=crop&auto=format&q=80';
+}
 
 function buildSidebar(){
   let html='';
@@ -101,6 +225,33 @@ function buildDashboard(){
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  LESSON BUILD                                                    ║
 // ╚══════════════════════════════════════════════════════════════════╝
+
+// ─── FORMAT ASSIGNMENT DESCRIPTION INTO RICH HTML ─────────────────
+function formatAssignDesc(raw){
+  if(!raw) return '';
+  // Only return the intro paragraph (before the first ✅)
+  const goodSplit = raw.split(/\n\n✅/);
+  const intro = goodSplit[0].replace(/\n/g,'<br>');
+  return '<div class="assign-intro">'+intro+'</div>';
+}
+
+// Returns the good/bad example blocks to show AFTER deliverables
+function formatAssignExamples(raw){
+  if(!raw) return '';
+  const goodSplit = raw.split(/\n\n✅/);
+  if(goodSplit.length < 2) return '';
+  const rest = goodSplit[1];
+  const badSplit = rest.split(/\n\n❌/);
+  const goodText = badSplit[0].replace(/\n/g,'<br>');
+  const goodHtml = '<div class="assign-example good-example"><div class="example-label">✅ Good Example</div><div class="example-body">'+goodText+'</div></div>';
+  let badHtml = '';
+  if(badSplit.length > 1){
+    const badText = badSplit[1].replace(/\n/g,'<br>');
+    badHtml = '<div class="assign-example bad-example"><div class="example-label">❌ Common Mistake</div><div class="example-body">'+badText+'</div></div>';
+  }
+  return goodHtml + badHtml;
+}
+
 function buildLesson(day){
   const lesson=LESSONS[day];
   if(!lesson)return;
@@ -178,7 +329,13 @@ function buildLesson(day){
       </a>`;}).join('')}</div>`:'<p style="color:var(--muted)">Inspiration links for this day will be added soon.</p>';
 
   // Build deliverables
-  const delivs=lesson.assignment.deliverables.map(d=>`<div class="deliverable-row"><span class="chk">▸</span><span>${d}</span></div>`).join('');
+  const delivs=lesson.assignment.deliverables.map((d,i)=>{
+    // Make first deliverable reference 'the assignment details above' instead of repeating them
+    const text = i===0 ? d.replace(/using all 5 layers/g,'using all 5 layers from the brief above')
+                          .replace(/Write a full prompt/g,'Write your prompt')
+                        : d;
+    return `<div class="deliverable-row"><span class="chk">▸</span><span>${text}</span></div>`;
+  }).join('');
 
   const toolChips=lesson.tools.map(t=>`<span class="meta-chip tool">🛠 ${t}</span>`).join('');
   const tagChips=(lesson.tags||[]).map(t=>`<span class="meta-chip">${t}</span>`).join('');
@@ -195,7 +352,7 @@ function buildLesson(day){
       </div>
     </div>
 
-    <div id="panel-lesson-${day}" class="lesson-panel">${lesson.content}</div>
+    <div id="panel-lesson-${day}" class="lesson-panel"></div>
     <div id="panel-refs-${day}" class="lesson-panel" style="display:none;">${refsHtml}</div>
     <div id="panel-videos-${day}" class="lesson-panel" style="display:none;">${videosHtml}</div>
     <div id="panel-inspo-${day}" class="lesson-panel" style="display:none;">${inspoHtml}</div>
@@ -205,8 +362,9 @@ function buildLesson(day){
           <div class="assign-icon">${lesson.assignment.emoji}</div>
           <div><div class="assign-label">📌 Day ${day} Assignment</div><div class="assign-title">${lesson.assignment.title}</div></div>
         </div>
-        <div class="assign-desc">${lesson.assignment.desc}</div>
+        <div class="assign-desc">${formatAssignDesc(lesson.assignment.desc)}</div>
         <div class="deliverables-grid">${delivs}</div>
+        <div class="assign-examples-block">${formatAssignExamples(lesson.assignment.desc)}</div>
         <div class="submit-label">Your Written Submission</div>
         <textarea class="submit-textarea" id="sub-${day}" placeholder="${lesson.assignment.placeholder}"></textarea>
         <button class="submit-btn" id="sbtn-${day}" onclick="submitAssignment(${day})">✦ Submit for AI Instructor Feedback</button>
@@ -223,16 +381,28 @@ function buildLesson(day){
     Upload the image made for this assignment. AI will check if it matches the brief, score it, and tell you exactly what to fix.
   </div>
 
-  <div class="drop-zone" id="dz-${day}" ondragover="dzOver(event,${day})" ondragleave="dzLeave(${day})" ondrop="dzDrop(event,${day})">
-    <input type="file" id="fi-${day}" accept="image/*" onchange="dzFile(event,${day})" style="position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;">
-    <div class="drop-icon">📥</div>
-    <div class="drop-title">Drop your image here</div>
-    <div class="drop-sub">PNG, JPG, WEBP supported · Click or drag & drop</div>
-  </div>
-
-  <div class="img-preview-box" id="ipb-${day}">
-    <img id="ipr-${day}" src="" alt="Preview">
-    <button class="remove-img" onclick="rmImg(${day})">✕ Remove</button>
+  <div class="multi-upload-zone" id="dz-${day}"
+       ondragover="muDragOver(event,'${day}')"
+       ondragleave="muDragLeave('${day}')"
+       ondrop="muDrop(event,'${day}')">
+    <!-- EMPTY STATE -->
+    <label class="multi-upload-empty" id="mu-empty-${day}" for="mu-fi-${day}">
+      <div class="drop-icon">📥</div>
+      <div class="drop-title">Drop images here or click to add</div>
+      <div class="drop-sub">PNG, JPG, WEBP · Up to 5 images</div>
+    </label>
+    <input type="file" id="mu-fi-${day}" accept="image/*" multiple
+           onchange="muAdd(event,'${day}')"
+           style="display:none;">
+    <!-- IMAGES GRID (shown when images added) -->
+    <div class="multi-imgs-grid" id="mu-grid-${day}" style="display:none;"></div>
+    <!-- FOOTER -->
+    <div class="multi-upload-footer" id="mu-footer-${day}" style="display:none;">
+      <span id="mu-count-${day}">0 / 5 images</span>
+      <label class="add-more-btn" id="mu-addbtn-${day}" for="mu-fi-${day}">
+        ＋ Add More
+      </label>
+    </div>
   </div>
 
   <div class="img-note">
@@ -248,10 +418,14 @@ function buildLesson(day){
     <div class="feedback-from" style="color:var(--purple);">🎨 Visual Analysis</div>
     <div class="feedback-text" id="ifbt-${day}" style="color:#4c1d95;"></div>
   </div>
-</div>
 
       ${done?`<div style="text-align:center;padding:12px 16px;color:var(--green);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;gap:10px;">✅ Day ${day} complete <button onclick="unmarkDone(${day})" style="font-size:11px;font-weight:700;padding:3px 10px;border-radius:6px;border:1px solid #ef4444;background:none;color:#ef4444;cursor:pointer;margin-left:4px;">↩ Undo</button></div>`:''}
     </div>`;
+
+  // Inject lesson HTML into the lesson panel after scaffold render.
+  // This prevents malformed lesson markup from escaping into sibling panels.
+  const lessonPanelEl=document.getElementById(`panel-lesson-${day}`);
+  if(lessonPanelEl) lessonPanelEl.innerHTML=lesson.content;
 
   // Nav bar
   document.getElementById('lesson-nav-bar').innerHTML=`
@@ -264,12 +438,15 @@ function buildLesson(day){
 }
 
 function switchLearnTab(btn,panelId){
-  const day=panelId.split('-').pop();
   document.querySelectorAll('#lesson-tabs-bar .ltab').forEach(t=>t.classList.remove('active'));
-  document.querySelectorAll('.lesson-panel').forEach(p=>p.style.display='none');
+  const contentArea=document.getElementById('lesson-content-area');
+  if(contentArea) contentArea.querySelectorAll('.lesson-panel').forEach(p=>p.style.display='none');
   btn.classList.add('active');
   const el=document.getElementById(`panel-${panelId}`);
-  if(el) el.style.display='block';
+  if(el){
+    el.style.display='block';
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+  }
 }
 
 function switchCompare(id,which){
@@ -868,6 +1045,8 @@ If the user provides a refinement request, modify only the relevant part without
       ]
     });
 
+    console.log("API RESPONSE:", data);
+
     // ✅ Correct parsing
     const text = data?.choices?.[0]?.message?.content || '';
 
@@ -1083,8 +1262,8 @@ function setImgpMode(btn){
   const submitBtn=document.getElementById('imgp-btn');
   if(submitBtn) submitBtn.textContent=`${labels[imgpMode] || '🖼 Generate Prompt from Image'}`;
 }
-function dzOver2(e){e.preventDefault();document.getElementById('imgp-dz').classList.add('over');}
-function dzLeave2(){document.getElementById('imgp-dz').classList.remove('over');}
+function dzOver2(e){e.preventDefault();const z=document.getElementById('imgp-dz');if(z){z.classList.add('over');z.querySelector('.drop-title').textContent='Drop to upload';}}
+function dzLeave2(){const z=document.getElementById('imgp-dz');if(z){z.classList.remove('over');const t=z.querySelector('.drop-title');if(t)t.textContent='Drop product/character image here';}}
 function dzDrop2(e){e.preventDefault();dzLeave2();const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))loadImgP(f);}
 function imgpFile(e){const f=e.target.files[0];if(f)loadImgP(f);}
 function loadImgP(file){
@@ -1191,10 +1370,15 @@ let toolsFilter = 'All';
 
 function buildToolsView(){
 
+  console.log("🔥 buildToolsView triggered");
+
   try {
 
     const filterEl = document.getElementById('tools-filter');
     const gridEl = document.getElementById('tools-grid');
+
+    console.log("Filter Element:", filterEl);
+    console.log("Grid Element:", gridEl);
 
     if (!filterEl || !gridEl) {
       console.error("❌ tools-filter or tools-grid not found in HTML");
@@ -1206,6 +1390,8 @@ function buildToolsView(){
       gridEl.innerHTML = "❌ TOOLS_DATA not found";
       return;
     }
+
+    console.log("TOOLS_DATA:", TOOLS_DATA);
 
     const cats = ['All','Image','Video','Audio','Design'];
 
@@ -1219,7 +1405,10 @@ function buildToolsView(){
       ? window.TOOLS_DATA
       : TOOLS_DATA.filter(t => t.cat === toolsFilter);
 
+    console.log("Filtered Tools:", filtered);
+
     if (!filtered.length) {
+      console.warn("⚠️ No tools found for filter:", toolsFilter);
       gridEl.innerHTML = "No tools found.";
       return;
     }
@@ -1246,6 +1435,8 @@ function buildToolsView(){
       </div>
     `).join('');
 
+    console.log("✅ Tools rendered successfully");
+
   } catch (e) {
     console.error("❌ ERROR in buildToolsView:", e);
     document.getElementById('tools-grid').innerHTML = "❌ Error loading tools. Check console.";
@@ -1253,6 +1444,7 @@ function buildToolsView(){
 }
 
 function filterTools(cat){
+  console.log("🔁 Filter clicked:", cat);
   toolsFilter = cat;
   buildToolsView();
 }
@@ -1305,80 +1497,99 @@ function buildSavedView(){
 // ║  ASSIGNMENT SUBMISSION                                           ║
 // ╚══════════════════════════════════════════════════════════════════╝
 async function submitAssignment(day){
-  const input = document.getElementById(`sub-${day}`);
-  const btn   = document.getElementById(`sbtn-${day}`);
-  const fb    = document.getElementById(`fb-${day}`);
-  const fbt   = document.getElementById(`fbt-${day}`);
+  const input  = document.getElementById('sub-'+day);
+  const btn    = document.getElementById('sbtn-'+day);
+  const fb     = document.getElementById('fb-'+day);
+  const fbt    = document.getElementById('fbt-'+day);
+  const lesson = LESSONS?.[day];
 
   const submission = input.value.trim();
 
-  if (!submission || submission.length < 20) {
-    fbt.innerHTML = '<span style="color:var(--red)">Please write a more detailed submission.</span>';
+  if(!submission || submission.length < 20){
+    fbt.innerHTML = '<span style="color:var(--red)">Please write a more detailed submission before getting feedback.</span>';
+    fb.classList.add('show');
+    return;
+  }
+
+  if(!lesson || !lesson.assignment){
+    fbt.innerHTML = '<span style="color:var(--red)">Assignment data missing for this day.</span>';
     fb.classList.add('show');
     return;
   }
 
   btn.disabled = true;
   btn.textContent = 'Getting feedback...';
-
   fb.classList.add('show');
+  fbt.innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><div class="loading-dots"><span></span><span></span><span></span></div><span style="color:var(--muted);font-size:13px;">AI instructor is reviewing your prompt...</span></div>';
 
-  fbt.innerHTML = `
-    <div style="display:flex;align-items:center;gap:10px;">
-      <div class="loading-dots">
-        <span></span><span></span><span></span>
-      </div>
-      <span style="color:var(--muted);font-size:13px;">
-        AI instructor is reviewing your work...
-      </span>
-    </div>
-  `;
+  // Build strict assignment-specific system prompt
+  const systemPrompt = lesson.assignment.systemPrompt ||
+    'You are a strict senior AI prompt engineering instructor. Review the student submission against the specific assignment requirements. Be direct, specific, and actionable.';
 
-  try {
+  const assignContext = `ASSIGNMENT: ${lesson.assignment.title}
+
+WHAT WAS REQUIRED:
+${lesson.assignment.desc.replace(/✅[\s\S]*?(?=❌|$)/,'').replace(/❌[\s\S]*/,'').trim()}
+
+SPECIFIC DELIVERABLES REQUIRED:
+${lesson.assignment.deliverables.map((d,i)=>(i+1)+'. '+d).join('\n')}`;
+
+  try{
     const res = await aiCall({
-        model: "openrouter/auto",
-        messages: [
-    {
-      role: "system",
-      content: `You are a senior AI design instructor.
+      model:'openrouter/auto',
+      messages:[
+        {
+          role:'system',
+          content: systemPrompt + `
 
-Give sharp, structured, no-fluff feedback.
+CRITICAL RULES:
+- Evaluate ONLY against this specific assignment — not general design quality
+- Reference the specific deliverables the student was asked to complete
+- Be strict: if a deliverable is missing, call it out by name
+- If the student pasted a prompt, evaluate it layer by layer
+- Keep feedback under 200 words total
+- End with a score X/10 based on how many deliverables were completed
 
-STRICT FORMAT:
+OUTPUT FORMAT:
+Assignment Match: [percentage of deliverables completed]
 
-Strengths:
-- ...
+What you did well:
+- [specific to this assignment]
 
-Weaknesses:
-- ...
+What is missing or weak:
+- [reference specific deliverables they missed]
 
-Improvements:
-- ...
+How to improve:
+- [actionable, specific to this prompt/assignment]
 
-Score: X/10
+Score: X/10`
+        },
+        {
+          role:'user',
+          content: assignContext + '\n\nSTUDENT SUBMISSION:\n' + submission
+        }
+      ]
+    });
 
-Be practical, honest, and actionable.`
-    },
-    {
-      role: "user",
-      content: `Student Submission:
-
-${submission}`}]});
-     
     const data = res;
-
     const text = data?.choices?.[0]?.message?.content || data?.content?.[0]?.text || '';
+    if(!text) throw new Error('Empty response');
 
-    if (!text) throw new Error("Invalid AI response");
-
-    fbt.innerHTML = text.replace(/\n/g, '<br>');
+    fbt.innerHTML = '<div style="line-height:1.8;font-size:13.5px;">'
+      + text.replace(/\n/g,'<br>')
+            .replace(/Assignment Match:/g,'<strong style="color:var(--primary);">Assignment Match:</strong>')
+            .replace(/What you did well:/g,'<br><strong style="color:#16a34a;">What you did well:</strong>')
+            .replace(/What is missing or weak:/g,'<br><strong style="color:#dc2626;">What is missing or weak:</strong>')
+            .replace(/How to improve:/g,'<br><strong style="color:#7c3aed;">How to improve:</strong>')
+            .replace(/Score:/g,'<br><strong style="font-size:15px;">Score:</strong>')
+      + '</div>';
 
     btn.textContent = '✦ Resubmit for More Feedback';
     btn.disabled = false;
 
-  } catch (e) {
+  }catch(e){
     console.error(e);
-    fbt.innerHTML = '<span style="color:var(--red)">❌ AI error. Check console.</span>';
+    fbt.innerHTML = '<span style="color:var(--red)">❌ Could not get feedback. Try again.</span>';
     btn.textContent = '✦ Retry';
     btn.disabled = false;
   }
@@ -1388,6 +1599,103 @@ ${submission}`}]});
 // ║  IMAGE FEEDBACK                                                  ║
 // ╚══════════════════════════════════════════════════════════════════╝
 const imgData={};
+// ─── IMAGE ANALYSIS CACHE & STATE (added v7) ─────────────────────────────
+let analysisCache = JSON.parse(localStorage.getItem('aiCourseAnalysisCache') || '{}');
+let analysisState = {};
+
+function saveAnalysisCache(){
+  try{ localStorage.setItem('aiCourseAnalysisCache', JSON.stringify(analysisCache)); }catch(e){}
+}
+
+async function sha256Hash(str){
+  const buf = new TextEncoder().encode(str);
+  const hashBuf = await crypto.subtle.digest('SHA-256', buf);
+  return Array.from(new Uint8Array(hashBuf)).map(b=>b.toString(16).padStart(2,'0')).join('');
+}
+
+function getAnalysisState(day){
+  if(!analysisState[day]){
+    analysisState[day]={day,isLoading:false,hasError:false,errorMessage:'',retryCount:0,maxRetries:5,uploadedImages:[],imageHashes:[]};
+  }
+  return analysisState[day];
+}
+
+// ─── MULTI-IMAGE UPLOAD HANDLERS v8 ─────────────────────────────────────────
+function muDragOver(e, day){ e.preventDefault(); const z=document.getElementById('dz-'+day); if(z) z.classList.add('over'); }
+function muDragLeave(day){ const z=document.getElementById('dz-'+day); if(z) z.classList.remove('over'); }
+function muDrop(e, day){ e.preventDefault(); muDragLeave(day); muAdd({target:{files:e.dataTransfer.files}}, day); }
+
+async function muAdd(e, day){
+  const st = getAnalysisState(day);
+  const files = Array.from(e.target.files||[]).filter(f=>f.type.startsWith('image/'));
+  const slots = 5 - st.uploadedImages.length;
+  const toAdd = files.slice(0, slots);
+  for(const file of toAdd){
+    await new Promise(res=>{
+      const r = new FileReader();
+      r.onload = async ev=>{
+        const data = ev.target.result;
+        const hash = await sha256Hash(data);
+        st.uploadedImages.push(data);
+        st.imageHashes.push(hash);
+        res();
+      };
+      r.readAsDataURL(file);
+    });
+  }
+  // Also keep legacy imgData in sync
+  if(st.uploadedImages.length > 0) imgData[day] = st.uploadedImages[0];
+  muRender(day);
+  // reset file input so same file can be re-added after remove
+  if(e.target) e.target.value='';
+}
+
+function muRender(day){
+  const st = getAnalysisState(day);
+  const empty = document.getElementById('mu-empty-'+day);
+  const grid  = document.getElementById('mu-grid-'+day);
+  const footer= document.getElementById('mu-footer-'+day);
+  const count = document.getElementById('mu-count-'+day);
+  const zone  = document.getElementById('dz-'+day);
+  const n = st.uploadedImages.length;
+  if(!grid) return;
+  if(n === 0){
+    if(empty) empty.style.display='';
+    grid.style.display = 'none';
+    if(footer) footer.style.display = 'none';
+    if(zone) zone.classList.remove('has-images');
+    return;
+  }
+  if(empty) empty.style.display = 'none';
+  grid.style.display = '';
+  if(footer){ footer.style.display=''; }
+  if(count) count.textContent = n+' / 5 image'+(n!==1?'s':'');
+  if(zone) zone.classList.add('has-images');
+  // Hide add-more button if at limit
+  const addBtn = document.getElementById('mu-addbtn-'+day);
+  if(addBtn) addBtn.style.display = n >= 5 ? 'none' : '';
+  // Render grid cells + add-more slot
+  const addSlot = n < 5
+    ? `<label class="multi-img-cell add-slot" for="mu-fi-${day}" title="Add more images">
+        <div class="cell-add"><span>＋</span>Add</div>
+       </label>`
+    : '';
+  grid.innerHTML = st.uploadedImages.map((img,i)=>`
+    <div class="multi-img-cell">
+      <img src="${img}" alt="Image ${i+1}">
+      <button class="cell-remove" onclick="muRemove('${day}',${i})" title="Remove">✕</button>
+    </div>
+  `).join('') + addSlot;
+}
+
+function muRemove(day, index){
+  const st = getAnalysisState(day);
+  st.uploadedImages.splice(index,1);
+  st.imageHashes.splice(index,1);
+  if(st.uploadedImages.length > 0){ imgData[day]=st.uploadedImages[0]; }
+  else { delete imgData[day]; }
+  muRender(day);
+}
 let imgMode='overall composition, visual balance, and professional quality';
 
 function setImgMode(btn){
@@ -1397,8 +1705,13 @@ function setImgMode(btn){
 }
 function dzOver(e,day){e.preventDefault();document.getElementById(`dz-${day}`).classList.add('over');}
 function dzLeave(day){document.getElementById(`dz-${day}`).classList.remove('over');}
-function dzDrop(e,day){e.preventDefault();dzLeave(day);const f=e.dataTransfer.files[0];if(f&&f.type.startsWith('image/'))loadImg(f,day);}
-function dzFile(e,day){const f=e.target.files[0];if(f)loadImg(f,day);}
+function dzDrop(e,day){
+  e.preventDefault(); dzLeave(day);
+  muAdd({target:{files:e.dataTransfer.files}}, day);
+}
+function dzFile(e,day){
+  muAdd(e, day);
+}
 function loadImg(file,day){
   const r=new FileReader();
   r.onload=ev=>{
@@ -1417,187 +1730,149 @@ function rmImg(day){
 }
 
 async function submitImgFeedback(day){
-
-  const data = imgData?.[day];
-  const note = document.getElementById(`inote-${day}`)?.value.trim() || "";
-  const btn  = document.getElementById(`isbtn-${day}`);
-  const fb   = document.getElementById(`ifb-${day}`);
-  const fbt  = document.getElementById(`ifbt-${day}`);
+  const st = getAnalysisState(day);
+  const note = document.getElementById('inote-'+day)?.value.trim()||'';
+  const btn  = document.getElementById('isbtn-'+day);
+  const fb   = document.getElementById('ifb-'+day);
+  const fbt  = document.getElementById('ifbt-'+day);
   const lesson = LESSONS?.[day];
 
-  if(!data){
+  // Use multi-image if available, fall back to legacy single image
+  const images = st.uploadedImages.length > 0 ? st.uploadedImages : (imgData[day] ? [imgData[day]] : []);
+  const hashes = st.imageHashes.length > 0 ? st.imageHashes : [];
+  if(hashes.length === 0 && images.length > 0){
+    const h = await sha256Hash(images[0]);
+    hashes.push(h);
+  }
+
+  if(!images.length){
     fb.classList.add('show');
     fbt.innerHTML = '<span style="color:var(--red)">Please upload an image first.</span>';
     return;
   }
-
   if(!lesson || !lesson.assignment){
     fb.classList.add('show');
     fbt.innerHTML = '<span style="color:var(--red)">❌ Assignment data missing.</span>';
     return;
   }
 
-  const imageUrl = data.startsWith("data:") ? data : `data:image/png;base64,${data}`;
+  // ── CACHE CHECK ─────────────────────────────────────────────────────────
+  const noteHash = await sha256Hash(note);
+  const cacheKey = hashes.join('_')+'_'+noteHash+'_day'+day;
+  if(analysisCache[cacheKey]){
+    fb.classList.add('show');
+    fbt.innerHTML = analysisCache[cacheKey];
+    if(btn){ btn.disabled=false; btn.textContent='🔍 Analyze My Image — Get Expert Feedback'; }
+    return;
+  }
 
-  btn.disabled = true;
-  btn.textContent = "Analyzing...";
-
+  // ── LOADING STATE ────────────────────────────────────────────────────────
+  st.isLoading = true; st.hasError = false;
+  if(btn){ btn.disabled=true; btn.textContent='Analyzing...'; }
   fb.classList.add('show');
 
-  let messages = [
-    "Analyzing your image...",
-    "Understanding assignment intent...",
-    "Evaluating composition and details...",
-    "Generating professional feedback...",
-    "Almost done..."
-  ];
-
-  let messageIndex = 0;
-
-  // 🔄 Dynamic loading text
-  const loadingInterval = setInterval(() => {
-    fbt.innerHTML = `
-      <div style="display:flex;align-items:center;gap:10px;">
-        <div class="loading-dots"><span></span><span></span><span></span></div>
-        <span style="color:var(--muted);font-size:13px;">
-          ${messages[messageIndex % messages.length]}
-        </span>
-      </div>
-    `;
-    messageIndex++;
+  const messages = ['Analyzing your image...','Understanding assignment intent...','Evaluating composition and details...','Generating professional feedback...','Almost done...'];
+  let mi=0;
+  const ticker = setInterval(()=>{
+    fbt.innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><div class="loading-dots"><span></span><span></span><span></span></div><span style="color:var(--muted);font-size:13px;">'+messages[mi%messages.length]+'</span></div>';
+    mi++;
   }, 2000);
+  fbt.innerHTML = '<div style="display:flex;align-items:center;gap:10px;"><div class="loading-dots"><span></span><span></span><span></span></div><span style="color:var(--muted);font-size:13px;">Analyzing your image...</span></div>';
 
-  try {
-
-    let result = null;
-    let attempts = 0;
-    const maxAttempts = 8; // safe limit (not infinite freeze)
+  try{
+    let result=null, attempts=0;
+    const maxAttempts = 8;
 
     while(!result && attempts < maxAttempts){
-
       try{
-        const res = await fetch("https://ai-proxy.akashsaha-rock666.workers.dev",{
-          method:"POST",
-          headers:{ "Content-Type":"application/json" },
-          body: JSON.stringify({
-            model:"openrouter/free",
+        const imageUrl = images[0].startsWith('data:') ? images[0] : 'data:image/png;base64,'+images[0];
+        const res = await fetch('https://ai-proxy.akashsaha-rock666.workers.dev',{
+          method:'POST',
+          headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({
+            model:'openrouter/free',
             messages:[
-              {
-                role:"system",
-                content:`You are a strict senior AI design instructor.
-
-Evaluate the uploaded image ONLY based on the assignment.
-
-ASSIGNMENT:
-${lesson.assignment.title}
-
-DESCRIPTION:
-${lesson.assignment.desc}
-
-OUTPUT FORMAT:
-
-Match Score: X/10
-
-Assignment Match:
-- Yes / Partially / No (reason)
-
-What works:
-- ...
-
-What is missing:
-- ...
-
-How to improve:
-- ...
-
-Improved Prompt:
-- (clean professional prompt)
-
-RULES:
-- Be strict
-- No generic feedback
-- Focus on assignment match
-- Keep under 150 words`
-              },
-              {
-                role:"user",
-                content:[
-                  {
-                    type:"image_url",
-                    image_url:{ url: imageUrl }
-                  },
-                  {
-                    type:"text",
-                    text:`Student note: ${note || "none"}`
-                  }
-                ]
-              }
+              {role:'system', content:'You are a strict senior AI design instructor.\n\nEvaluate the uploaded image ONLY based on the assignment.\n\nASSIGNMENT:\n'+lesson.assignment.title+'\n\nDESCRIPTION:\n'+lesson.assignment.desc+'\n\nOUTPUT FORMAT:\n\nMatch Score: X/10\n\nAssignment Match:\n- Yes / Partially / No (reason)\n\nWhat works:\n- ...\n\nWhat is missing:\n- ...\n\nHow to improve:\n- ...\n\nImproved Prompt:\n- (clean professional prompt)\n\nRULES:\n- Be strict\n- No generic feedback\n- Focus on assignment match\n- Keep under 150 words'},
+              {role:'user', content:[{type:'image_url',image_url:{url:imageUrl}},{type:'text',text:'Student note: '+(note||'none')+(images.length>1?' ['+images.length+' images uploaded, evaluating primary image]':'')}]}
             ]
           })
         });
-
-        if(!res.ok){
-          attempts++;
-          await new Promise(r => setTimeout(r, 1200));
-          continue;
-        }
-
+        if(!res.ok){ attempts++; await new Promise(r=>setTimeout(r,1200)); continue; }
         const dataRes = await res.json();
         const text = dataRes?.choices?.[0]?.message?.content;
-
-        // ✅ strict validation
-        if(text && text.trim().length > 40){
-          result = text.trim();
-        } else {
-          attempts++;
-          await new Promise(r => setTimeout(r, 1200));
-        }
-
-      }catch(innerErr){
-        attempts++;
-        await new Promise(r => setTimeout(r, 1200));
-      }
+        if(text && text.trim().length>40){ result=text.trim(); }
+        else{ attempts++; await new Promise(r=>setTimeout(r,1200)); }
+      }catch(innerErr){ attempts++; await new Promise(r=>setTimeout(r,1200)); }
     }
 
-    clearInterval(loadingInterval);
+    clearInterval(ticker);
+    st.isLoading=false;
 
     if(!result){
-      fbt.innerHTML = `
-        <span style="color:var(--muted)">
-          ⚠️ Server is busy right now. Please try again in a few seconds.
-        </span>
-      `;
+      // All attempts exhausted — show error + retry/refresh buttons
+      st.hasError=true; st.retryCount++;
+      const errMsg = st.retryCount >= st.maxRetries
+        ? '❌ Maximum retry attempts (5) reached. The server may be temporarily unavailable.'
+        : '⚠️ Server error — try again later.';
+      fbt.innerHTML = '<div style="margin-bottom:12px;color:var(--muted);">'+errMsg+'</div>'
+        +(st.retryCount < st.maxRetries
+          ? '<button onclick="submitImgFeedback('+day+')" style="padding:8px 18px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;margin-right:10px;">🔄 Retry ('+st.retryCount+'/'+st.maxRetries+')</button>'
+          : '<button onclick="location.reload()" style="padding:8px 18px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;margin-right:10px;">🔄 Refresh Page</button>')
+        +'<button onclick="resetImgFeedback('+day+')" style="padding:8px 18px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer;">← Back</button>';
+      if(btn){ btn.disabled=(st.retryCount>=st.maxRetries); btn.textContent='🔍 Analyze My Image — Get Expert Feedback'; }
       return;
     }
 
-    // ✅ FINAL OUTPUT
-    fbt.innerHTML = `
-      <div style="line-height:1.7;">
-        ${result
-          .replace(/\n/g,'<br>')
-          .replace(/Match Score:/g,'<br><strong style="color:#22c55e;">Match Score:</strong>')
-          .replace(/Assignment Match:/g,'<br><strong>Assignment Match:</strong>')
-          .replace(/What works:/g,'<br><strong>What works:</strong>')
-          .replace(/What is missing:/g,'<br><strong>What is missing:</strong>')
-          .replace(/How to improve:/g,'<br><strong>How to improve:</strong>')
-          .replace(/Improved Prompt:/g,'<br><strong style="color:#7c3aed;">Improved Prompt:</strong>')
-        }
-      </div>
-    `;
+    // ── SUCCESS ────────────────────────────────────────────────────────────
+    st.retryCount=0; st.hasError=false;
+    const html = '<div style="line-height:1.7;">'
+      +result.replace(/\n/g,'<br>')
+        .replace(/Match Score:/g,'<br><strong style="color:#22c55e;">Match Score:</strong>')
+        .replace(/Assignment Match:/g,'<br><strong>Assignment Match:</strong>')
+        .replace(/What works:/g,'<br><strong>What works:</strong>')
+        .replace(/What is missing:/g,'<br><strong>What is missing:</strong>')
+        .replace(/How to improve:/g,'<br><strong>How to improve:</strong>')
+        .replace(/Improved Prompt:/g,'<br><strong style="color:#7c3aed;">Improved Prompt:</strong>')
+      +'</div>';
 
-  } catch(e){
-    clearInterval(loadingInterval);
-    console.error(e);
+    // Cache it
+    analysisCache[cacheKey] = html;
+    saveAnalysisCache();
 
-    fbt.innerHTML = `
-      <span style="color:var(--muted)">
-        ⚠️ Temporary issue. Please try again.
-      </span>
-    `;
+    fbt.innerHTML = html;
+    if(btn){ btn.disabled=false; btn.textContent='🔍 Analyze My Image — Get Expert Feedback'; }
+
+  }catch(e){
+    clearInterval(ticker);
+    st.isLoading=false; st.hasError=true; st.retryCount++;
+    const errMsg = e.message && e.message.includes('fetch')
+      ? 'Failed to analyze image — check your internet connection.'
+      : 'Server error — try again later.';
+    fbt.innerHTML = '<div style="margin-bottom:12px;color:var(--muted);">'+errMsg+'</div>'
+      +(st.retryCount < st.maxRetries
+        ? '<button onclick="submitImgFeedback('+day+')" style="padding:8px 18px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;margin-right:10px;">🔄 Retry ('+st.retryCount+'/'+st.maxRetries+')</button>'
+        : '<button onclick="location.reload()" style="padding:8px 18px;background:var(--primary);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;margin-right:10px;">🔄 Refresh Page</button>')
+      +'<button onclick="resetImgFeedback('+day+')" style="padding:8px 18px;background:var(--bg2);color:var(--text);border:1px solid var(--border);border-radius:6px;cursor:pointer;">← Back</button>';
+    if(btn){ btn.disabled=(st.retryCount>=st.maxRetries); btn.textContent='🔍 Analyze My Image — Get Expert Feedback'; }
   }
+}
 
-  btn.disabled = false;
-  btn.textContent = "🔍 Analyze My Image — Get Expert Feedback";
+function resetImgFeedback(day){
+  const st = getAnalysisState(day);
+  st.uploadedImages=[]; st.imageHashes=[]; st.hasError=false; st.retryCount=0; st.isLoading=false;
+  delete imgData[day];
+  const fb=document.getElementById('ifb-'+day);
+  const fb2=document.getElementById('fb-'+day);
+  const ipb=document.getElementById('ipb-'+day);
+  const dz=document.getElementById('dz-'+day);
+  const mp=document.getElementById('multi-prev-'+day);
+  const btn=document.getElementById('isbtn-'+day);
+  if(fb) fb.classList.remove('show');
+  if(fb2) fb2.classList.remove('show');
+  if(ipb) ipb.classList.remove('show');
+  if(dz) dz.style.display='';
+  if(mp){ mp.innerHTML=''; mp.style.display='none'; }
+  if(btn){ btn.disabled=false; btn.textContent='🔍 Analyze My Image — Get Expert Feedback'; }
 }
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  NAVIGATION                                                      ║
@@ -1605,6 +1880,8 @@ RULES:
 const VIEWS=['dashboard','learn','vocab','builder','tools','projects','saved'];
 
 function showView(view){
+
+  console.log("🔄 Switching to view:", view);
 
   state.currentView = view;
 
@@ -1614,6 +1891,7 @@ function showView(view){
     if(el){
       el.style.display = 'none';
     } else {
+      console.warn(`❌ Missing view: ${v}-view`);
     }
   });
 
@@ -1632,6 +1910,7 @@ function showView(view){
 
   if(currentViewEl){
     currentViewEl.style.display = 'block';
+    console.log("✅ View shown:", viewMap[view]);
   } else {
     console.error("❌ View element NOT FOUND:", viewMap[view]);
   }
@@ -1806,45 +2085,57 @@ function _log(level, message, data = null) {
     console.error('Failed to log:', e);
   }
 
+  console.log(`[${timestamp}] ${level}: ${message}`, data || '');
   */
   // No-op while debug logging is commented out.
 }
 
 function goLogin() {
   const isOnLogin = window.location.pathname.endsWith('/login.html') || window.location.pathname.endsWith('login.html');
+  _log('WARNING', 'goLogin() called', { currentPath: window.location.pathname, willRedirect: !isOnLogin });
   if (!isOnLogin) {
+    _log('WARNING', 'Redirecting to login.html', { from: window.location.href });
     window.location.href = 'login.html';
   }
 }
 
 // ── Auth guard: runs before anything else ──
 async function initAuth() {
+  _log('INFO', 'initAuth() starting', { timestamp: new Date().toISOString() });
   try {
     const { data: { session } } = await _sb.auth.getSession();
     _authBootstrapped = true;
+    _log('INFO', 'Session retrieved', { hasSession: !!session, userId: session?.user?.id });
     if (!session) {
+      _log('ERROR', 'No session found, redirecting to login');
       goLogin();
       return;
     }
     _user  = session.user;
     _token = session.access_token;
+    _log('SUCCESS', 'User authenticated', { userId: _user.id, email: _user.email });
     await loadCloudProgress();
     _renderUserMenu(_user);
     document.getElementById('auth-guard').style.display = 'none';
     document.getElementById('user-menu').style.display  = 'flex';
     buildSidebar();
+    _log('INFO', 'UI initialized and displayed');
     showView(state.currentView || 'dashboard');
   } catch(e) {
+    _log('ERROR', 'Auth error in initAuth', { error: e.message, stack: e.stack });
     goLogin();
   }
 }
 
 // Auto-refresh token + handle sign-out from another tab
 _sb.auth.onAuthStateChange((event, session) => {
+  _log('INFO', 'onAuthStateChange fired', { event, hasSession: !!session, bootstrapped: _authBootstrapped });
   if (event === 'TOKEN_REFRESHED' && session) {
     _token = session.access_token;
+    _log('INFO', 'Token refreshed');
   }
   if (event === 'SIGNED_OUT' || !session) {
+    _log('WARNING', 'Auth state listener: no session detected, redirecting', { event, session: !!session });
     goLogin();
   }
 });
@@ -1870,7 +2161,9 @@ document.addEventListener('click', e => {
 });
 
 async function doLogout() {
+  _log('INFO', 'doLogout() called');
   await _sb.auth.signOut();
+  _log('INFO', 'signOut() completed');
   goLogin();
 }
 
@@ -1906,13 +2199,17 @@ async function saveProgress() {
 
 // ── Secure AI call — always sends auth token ──
 async function aiCall(body) {
+  _log('INFO', 'aiCall() starting', { hasToken: !!_token, method: body.method });
   if (!_token) {
+    _log('INFO', 'No token, fetching fresh session');
     const { data: { session } } = await _sb.auth.getSession();
     if (!session) {
+      _log('ERROR', 'No session for aiCall, redirecting');
       goLogin();
       throw new Error('Not authenticated');
     }
     _token = session.access_token;
+    _log('INFO', 'Token acquired from session');
   }
   let res = await fetch(WORKER_URL, {
     method: 'POST',
@@ -1923,11 +2220,15 @@ async function aiCall(body) {
     body: JSON.stringify(body)
   });
 
+  _log('INFO', 'API response', { status: res.status });
+
   // A stale access token can temporarily return 401; refresh once before redirecting.
   if (res.status === 401) {
+    _log('WARNING', 'Got 401, attempting token refresh');
     const { data: { session } } = await _sb.auth.getSession();
     if (session?.access_token) {
       _token = session.access_token;
+      _log('INFO', 'Token refreshed, retrying request');
       res = await fetch(WORKER_URL, {
         method: 'POST',
         headers: {
@@ -1936,10 +2237,12 @@ async function aiCall(body) {
         },
         body: JSON.stringify(body)
       });
+      _log('INFO', 'Retry response', { status: res.status });
     }
   }
 
   if (res.status === 401) {
+    _log('ERROR', 'Still 401 after retry, redirecting to login');
     goLogin();
     throw new Error('Session expired');
   }
@@ -1947,4 +2250,5 @@ async function aiCall(body) {
 }
 
 // Boot — everything waits for auth
+_log('INFO', 'PAGE LOAD: app.html', { timestamp: new Date().toISOString(), pathname: window.location.pathname });
 initAuth();
