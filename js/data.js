@@ -1,7 +1,18 @@
-/* ═══════════════════════════════════════════════════════════
-   AI Design Mastery — data.js
-   State, persistence, and all course data
-═══════════════════════════════════════════════════════════ */
+/*!
+ * AI Design Mastery — 45-Day AI Prompt & Design Course
+ * Copyright © 2025 Akash Saha. All rights reserved.
+ * Website : https://akashsaha29.github.io
+ *
+ * Unauthorised copying, modification, distribution or use of this
+ * software without prior written permission is strictly prohibited.
+ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   data.js — Static Course Data
+   Contains: PHASES, LESSONS (1–45), VOCABULARY, TOOLS, PROJECTS
+   Must be loaded BEFORE app.js
+───────────────────────────────────────────────────────────────────────────── */
+
 // ╔══════════════════════════════════════════════════════════════════╗
 // ║  STATE & PERSISTENCE                                             ║
 // ╚══════════════════════════════════════════════════════════════════╝
@@ -1980,3 +1991,7 @@ const ASSIGNMENTS=[
   {n:'09',type:'video',t:'Beat-Synced Music Video',d:'Timeline-scripted prompts synced to beat markers.',tools:['Kling 2.6','Suno','CapCut','Topaz'],day:30},
   {n:'10',type:'video',t:'90-Second Campaign Showreel',d:'Final capstone: assemble your 10 projects into one demo reel.',tools:['CapCut Pro','Suno v4','ElevenLabs'],day:30},
 ];
+
+// ╔══════════════════════════════════════════════════════════════════╗
+// ║  SIDEBAR BUILD                                                   ║
+// ╚══════════════════════════════════════════════════════════════════╝
