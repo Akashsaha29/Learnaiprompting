@@ -1,10 +1,18 @@
-/* ═══════════════════════════════════════════════════════════
-   AI Design Mastery — app.js
-   All UI functions, auth, and app boot
-═══════════════════════════════════════════════════════════ */
-// ╔══════════════════════════════════════════════════════════════════╗
-// ║  SIDEBAR BUILD                                                   ║
-// ╚══════════════════════════════════════════════════════════════════╝
+/*!
+ * AI Design Mastery — 45-Day AI Prompt & Design Course
+ * Copyright © 2025 Akash Saha. All rights reserved.
+ * Website : https://akashsaha29.github.io
+ *
+ * Unauthorised copying, modification, distribution or use of this
+ * software without prior written permission is strictly prohibited.
+ */
+
+/* ─────────────────────────────────────────────────────────────────────────────
+   app.js — Application Logic
+   Contains: UI rendering, navigation, Supabase auth, AI calls
+   Requires: data.js loaded first
+───────────────────────────────────────────────────────────────────────────── */
+
 function getVideoThumb(title) {
   const map = {
     'How AI Image Generation Actually Works': 'https://images.unsplash.com/photo-1677442135703-1787eea5ce01?w=320&h=180&fit=crop&auto=format&q=80',
@@ -2250,5 +2258,5 @@ async function aiCall(body) {
 }
 
 // Boot — everything waits for auth
-_log('INFO', 'PAGE LOAD: app.html', { timestamp: new Date().toISOString(), pathname: window.location.pathname });
+_log('INFO', 'PAGE LOAD: index.html', { timestamp: new Date().toISOString(), pathname: window.location.pathname });
 initAuth();
