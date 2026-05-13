@@ -28,10 +28,15 @@
   <meta name="twitter:image"       content="https://akashsaha29.github.io/og-image.png">
 
   <!-- ═══ Favicon ═══════════════════════════════════════════════════════ -->
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>✦</text></svg>">
+  <link rel="icon" type="image/png" href="V1.png">
 
   <!-- ═══ Supabase (auth) ════════════════════════════════════════════════ -->
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <!-- ═══ Fonts (Fraunces + DM Sans) ═══════════════════════════════════════ -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,700;0,9..144,900;1,9..144,400&family=DM+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
 
   <!-- ═══ Stylesheet ════════════════════════════════════════════════════ -->
   <link rel="stylesheet" href="css/styles.css">
@@ -49,7 +54,7 @@
 
 <!-- TOPBAR -->
 <div id="auth-guard">
-  <div class="ag-logo">✦</div>
+  <img src="V1.png" alt="AI Design Mastery Logo" class="ag-logo-img">
   <div class="ag-title">AI Design Mastery</div>
   <div class="ag-sub">Checking session...</div>
   <div class="ag-spin"></div>
@@ -57,7 +62,7 @@
 <div id="topbar">
   <button id="menu-btn" onclick="toggleSidebar()">☰</button>
   <a class="topbar-brand" onclick="showView('dashboard');return false;" href="#">
-    <div class="brand-dot">✦</div>
+    <img src="V1.png" alt="AI Design Mastery Logo" class="brand-logo-img">
     <span class="brand-text">AI Design Mastery</span>
   </a>
   <!-- MAIN NAV LINKS -->
