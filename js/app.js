@@ -1,7 +1,7 @@
 /*!
  * AI Design Mastery — 45-Day AI Prompt & Design Course
  * Copyright © 2025 Akash Saha. All rights reserved.
- * Website : https:aidesignmastery.in
+ * Website : https://aidesignmastery.in
  *
  * Unauthorised copying, modification, distribution or use of this
  * software without prior written permission is strictly prohibited.
@@ -1080,121 +1080,183 @@ If the user provides a refinement request, modify only the relevant part without
 
 async function generateImagePrompt(){
 
-  // FIX 2: Use imgpData (set by drag/drop loadImgP) first, fall back to file input
+  // Use imgpData (drag/drop) first, fall back to file input
   const fileInput = document.getElementById("imgp-fi");
   const file = fileInput.files[0];
-  const base64Source = imgpData || null; // imgpData is set by drag/drop via loadImgP
+  const base64Source = imgpData || null;
 
   const output = document.getElementById("imgp-result");
   const btn = document.getElementById("imgp-btn");
   const context = document.getElementById("imgp-context").value.trim();
 
-  // Need either dragged image (imgpData) or file input file
   if(!base64Source && !file){
     alert("Please upload an image first");
     return;
   }
 
   const RETRY_MAX = 3;
+  const TIMEOUT_MS = 35000; // 35 seconds — enough for free tier vision models
   let retryCount = 0;
+
+  // ── Per-mode dedicated system prompts ──────────────────────────────────────
+  // Each mode has a completely separate, precise instruction set so the AI
+  // cannot confuse modes or produce generic output.
+  const MODE_PROMPTS = {
+
+    recreate: `You are a world-class AI prompt engineer specialising in photographic reconstruction.
+
+Your ONLY job: write ONE single Midjourney prompt that would recreate the uploaded image as accurately as possible.
+
+ANALYSE the image for:
+- SUBJECT: exact description (age range, gender, clothing colours/materials, pose, expression, skin tone, hair)
+- ENVIRONMENT: exact location type, background elements, depth, props
+- LIGHTING: direction (front/side/back), quality (hard/soft/diffused), colour temperature (warm/cool/neutral), source type (natural/artificial/studio)
+- CAMERA: angle (eye-level/high/low/dutch), lens feel (wide/standard/telephoto), depth of field (shallow/deep), focus point
+- STYLE: photographic style reference (e.g. Kinfolk editorial, Helmut Newton, Annie Leibovitz, product photography, etc.)
+- COLOUR: dominant palette, tones, saturation level
+- TECHNICAL: aspect ratio estimate, any post-processing feel (matte, film grain, clean digital)
+
+OUTPUT FORMAT — write ONE professional Midjourney prompt in this structure:
+[detailed subject description], [environment/setting], [lighting description], [camera angle and lens], [photographic style reference], [colour palette], [mood], --ar [ratio] --no [things to avoid]
+
+RULES:
+- NO headers, NO labels, NO explanation — just the raw prompt
+- NO generic words: no "beautiful", "nice", "stunning", "amazing"
+- EVERY word must describe something visually specific and real
+- Minimum 60 words, maximum 120 words
+- The prompt must be copy-pasteable directly into Midjourney`,
+
+    adscene: `You are a world-class commercial director and AI prompt engineer.
+
+Your ONLY job: take the subject/product from the uploaded image and write ONE Midjourney/Kling prompt that places it in a dramatic cinematic advertising scene.
+
+STEP 1 — identify from the image:
+- The PRIMARY SUBJECT or PRODUCT (what is it exactly — describe material, colour, form)
+- Any brand cues or product category
+
+STEP 2 — write a cinematic ad scene prompt with:
+- SUBJECT: keep the exact product/subject description from the image
+- SCENE: dramatic, premium environment that matches the product category (e.g. perfume → misty mountains at golden hour, headphones → neon-lit Tokyo rooftop)
+- LIGHTING: cinematic — directional, dramatic, with lens flare or atmospheric haze if appropriate
+- CAMERA: specific cinematic shot type (extreme close-up, low angle hero shot, Dutch angle, birds-eye)
+- STYLE: reference a real director or film aesthetic (Christopher Nolan, Roger Deakins cinematography, Denis Villeneuve, Nike ad aesthetic, Apple product reveal style)
+- MOOD: the emotional feeling the ad should evoke
+- COLOUR GRADE: specific LUT or colour palette (teal-orange blockbuster grade, desaturated moody, warm analogue film)
+
+OUTPUT FORMAT — write ONE professional prompt in this structure:
+[product/subject description], [cinematic environment], [dramatic lighting], [camera shot type], [director/film style reference], [colour grade], [mood/emotion], --ar 16:9 --no [things to avoid]
+
+RULES:
+- NO headers, NO labels, NO explanation — just the raw prompt
+- NO generic words — every word must be visually specific
+- Minimum 60 words, maximum 130 words
+- Copy-pasteable directly into Midjourney or Kling`,
+
+    both: `You are a world-class AI prompt engineer and commercial creative director.
+
+Your ONLY job: analyse the uploaded image and write TWO separate professional prompts.
+
+PROMPT 1 — RECREATE (exact reproduction):
+Analyse and reconstruct: subject details, environment, lighting direction and quality, camera angle, lens feel, photographic style, colour palette, aspect ratio.
+Write ONE Midjourney prompt that would reproduce this image as closely as possible.
+Format: [subject] [environment] [lighting] [camera/lens] [style reference] [colour palette] [mood] --ar [ratio] --no [avoid]
+
+PROMPT 2 — AD SCENE (cinematic transformation):
+Keep the same subject/product but transform it into a premium advertising scene.
+Add: dramatic lighting, cinematic environment appropriate for the product category, specific director/film style reference, strong colour grade, emotional mood.
+Format: [product description] [cinematic environment] [dramatic lighting] [shot type] [director style] [colour grade] [mood] --ar 16:9 --no [avoid]
+
+OUTPUT FORMAT — respond EXACTLY like this, nothing else:
+🔁 RECREATE PROMPT:
+[your recreate prompt here]
+
+🎬 AD SCENE PROMPT:
+[your ad scene prompt here]
+
+RULES:
+- NO extra explanation, NO preamble, NO headers beyond the two labels above
+- Each prompt: minimum 50 words, maximum 120 words
+- NO generic adjectives — every word must be visually specific and actionable`,
+
+    vocab: `You are a professional photography and AI design educator.
+
+Your ONLY job: analyse the uploaded image and break it down using the professional 5-layer prompt vocabulary framework used by top AI designers.
+
+For EACH layer, give:
+1. The specific term(s) that describe what you see
+2. Why those terms matter for recreating this image
+
+OUTPUT FORMAT — respond EXACTLY like this:
+
+SUBJECT
+Term(s): [e.g. "30-year-old woman, tailored navy blazer, relaxed confident posture"]
+Why it matters: [1 sentence]
+
+ACTION / STATE
+Term(s): [e.g. "standing with arms crossed, slight head tilt, direct gaze"]
+Why it matters: [1 sentence]
+
+ENVIRONMENT
+Term(s): [e.g. "modern glass office lobby, marble floor, blurred background figures"]
+Why it matters: [1 sentence]
+
+LIGHTING
+Term(s): [e.g. "soft directional window light from camera left, cool 5600K, subtle fill from right"]
+Why it matters: [1 sentence]
+
+STYLE & CAMERA
+Term(s): [e.g. "Kinfolk editorial photography, Canon EOS R5 85mm f/1.8, shallow depth of field, slightly desaturated film-like tones"]
+Why it matters: [1 sentence]
+
+COPY-READY PROMPT
+[Combine all layers into one professional Midjourney prompt the user can copy directly]
+
+RULES:
+- Be specific — no vague terms like "professional" or "nice"
+- Use real photography vocabulary: lighting angles, camera specs, style references
+- Every term must be something you can actually type into Midjourney`
+  };
 
   async function runAnalysis(){
 
     btn.disabled = true;
     btn.textContent = retryCount === 0 ? "Analyzing image..." : "Retrying...";
 
-    // 🔄 Loading UI
+    // Loading UI
     output.innerHTML = `
       <div class="fixer-placeholder">
         <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
           <div class="loading-dots"><span></span><span></span><span></span></div>
           <span style="color:var(--muted);font-size:13px;">
-            ${retryCount === 0 ? 'Processing... Please wait, generating best result...' : 'Retrying... (attempt '+(retryCount+1)+' of '+RETRY_MAX+')'}
+            ${retryCount === 0 ? 'Analyzing your image...' : 'Retrying... (attempt '+(retryCount+1)+' of '+RETRY_MAX+')'}
           </span>
         </div>
       </div>
     `;
 
+    // AbortController for fast timeout — don't make user wait 60+ seconds
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), TIMEOUT_MS);
+
     try{
 
-      // FIX 2: Use imgpData from drag/drop if available, else read from file input
       const base64 = base64Source || await toBase64(file);
+      const systemPrompt = MODE_PROMPTS[imgpMode] || MODE_PROMPTS.both;
 
-      // FIX 4: Detect HTTP 500 early before parsing JSON
       const res = await fetch("https://ai-proxy.akashsaha-rock666.workers.dev",{
         method:"POST",
+        signal: controller.signal,
         headers:{ "Content-Type":"application/json" },
         body: JSON.stringify({
-          model:"openrouter/free",
           messages:[
             {
               role:"system",
-              // FIX bonus: use imgpMode (image-to-prompt mode) not imgMode (assignment feedback mode)
-              content:`You are a senior visual AI analyst and commercial prompt engineer.
-
-You MUST deeply analyze the image and produce a HIGH-QUALITY result.
-
-DO NOT leave anything blank.
-DO NOT give generic answers.
-DO NOT summarize.
-DO NOT be lazy.
-
--------------------------------------
-MODE: ${imgpMode}
-
--------------------------------------
-MODE INSTRUCTIONS:
-
-1. recreate:
-- Recreate the exact image
-- Include subject details, material, color, position
-- Include environment, lighting direction, camera angle
-- Must be visually reconstructable
-
-2. adscene:
-- Keep same subject
-- Transform into cinematic ad scene
-- Add storytelling, dramatic lighting, premium composition
-
-3. both:
-- Keep original structure
-- Slightly enhance environment and lighting
-- Add subtle commercial feel without changing subject
-
-4. vocab:
-- Extract FULL 5-layer structure:
-
-Subject:
-Action:
-Environment:
-Lighting:
-Style & Camera:
-
--------------------------------------
-STRICT RULES:
-
-- No empty fields
-- No placeholders
-- No generic words like "nice" or "beautiful"
-- Every line must describe real visual details
-- Be specific (e.g. "top-down angle", "harsh sunlight from right")
-
--------------------------------------
-USER CONTEXT:
-${context || "none"}
-
--------------------------------------
-OUTPUT RULE:
-
-recreate / adscene / both → ONE clean professional prompt  
-vocab → structured format ONLY  
-
-NO EXTRA TEXT.`
+              content: systemPrompt + (context ? "\n\nUSER CONTEXT: " + context : "")
             },
             {
               role:"user",
               content:[
-                { type:"text", text:"Analyze this image and generate output based on selected mode" },
+                { type:"text", text:"Analyze this image and produce your output now." },
                 { type:"image_url", image_url:{ url: base64 } }
               ]
             }
@@ -1202,54 +1264,57 @@ NO EXTRA TEXT.`
         })
       });
 
-      // FIX 4: Detect 500 / server error EARLY before parsing body
+      clearTimeout(timeoutId);
+
+      // Detect server error immediately before parsing
       if(!res.ok){
         throw new Error('SERVER_ERROR_' + res.status);
       }
 
       const data = await res.json();
-      const text = data?.choices?.[0]?.message?.content;
+      const text = data?.choices?.[0]?.message?.content?.trim();
 
-      // Validate result
-      let result = null;
-      if(text && text.trim().length > 30 && !text.includes("Subject:") && imgpMode !== "vocab"){
-        result = text.trim();
-      }
-      else if(text && text.trim().length > 30 && imgpMode === "vocab"){
-        result = text.trim();
-      }
-
-      if(!result){
+      // Validate — minimum meaningful response
+      if(!text || text.length < 40){
         throw new Error('WEAK_RESPONSE');
       }
 
-      // ✅ Success
+      // ✅ Success — render output
+      const modeLabels = {
+        recreate: '🔁 Recreate Prompt — Ready for Midjourney',
+        adscene:  '🎬 Ad Scene Prompt — Ready for Midjourney / Kling',
+        both:     '✨ Both Prompts — Ready to Copy',
+        vocab:    '📚 Vocabulary Breakdown'
+      };
+
       output.innerHTML = `
-        <div class="imgp-output-label">
-          ${imgpMode === "vocab" ? "Prompt Breakdown" : "Generated Prompt"}
-        </div>
-        <div class="imgp-output-prompt">${result}</div>
+        <div class="imgp-output-label">${modeLabels[imgpMode] || 'Generated Prompt'}</div>
+        <div class="imgp-output-prompt" style="white-space:pre-wrap;">${text}</div>
       `;
       btn.disabled = false;
       btn.textContent = "🖼 Generate Prompt from Image";
 
     } catch(err){
+      clearTimeout(timeoutId);
       console.error(err);
       retryCount++;
 
-      // FIX 3 & 4: Show "AI is busy" error early + Retry button
-      const isBusy = err.message && (err.message.includes('SERVER_ERROR') || err.message.includes('WEAK_RESPONSE'));
+      const isTimeout = err.name === 'AbortError';
+      const isBusy = isTimeout || (err.message && (err.message.includes('SERVER_ERROR') || err.message.includes('WEAK_RESPONSE')));
       const canRetry = retryCount < RETRY_MAX;
-      const errLabel = isBusy
+
+      const errLabel = isTimeout
+        ? '⏱ AI is taking too long. It may be busy right now.'
+        : isBusy
         ? '⚠️ AI is busy right now. Please try again.'
         : '❌ Connection error. Please check your internet and try again.';
 
       output.innerHTML = `
         <div style="padding:16px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;">
-          <div style="font-size:13px;font-weight:700;color:#991b1b;margin-bottom:${canRetry ? '12px' : '0'};">${errLabel}</div>
+          <div style="font-size:13px;font-weight:700;color:#991b1b;margin-bottom:${canRetry ? '12px' : '4px'};">${errLabel}</div>
           ${canRetry
-            ? `<button onclick="retryImgPrompt()" style="padding:8px 18px;background:var(--purple,#7c3aed);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;margin-right:8px;">🔄 Retry (${retryCount}/${RETRY_MAX})</button>`
-            : `<div style="font-size:12px;color:#991b1b;margin-top:4px;">Maximum retries reached. Please wait a moment and refresh the page.</div>`
+            ? `<button onclick="retryImgPrompt()" style="padding:8px 18px;background:var(--purple,#7c3aed);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;">🔄 Retry (${retryCount}/${RETRY_MAX})</button>`
+            : `<div style="font-size:12px;color:#991b1b;">Maximum retries reached. Please wait a moment and try again.</div>`
           }
         </div>
       `;
@@ -1258,9 +1323,7 @@ NO EXTRA TEXT.`
     }
   }
 
-  // Expose retry function globally so the retry button can call it
   window.retryImgPrompt = runAnalysis;
-
   await runAnalysis();
 }
 
