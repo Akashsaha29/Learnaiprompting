@@ -1,7 +1,7 @@
 /*!
  * AI Design Mastery — 45-Day AI Prompt & Design Course
  * Copyright © 2025 Akash Saha. All rights reserved.
- * Website : https://akashsaha29.github.io
+ * Website : https:aidesignmastery.in
  *
  * Unauthorised copying, modification, distribution or use of this
  * software without prior written permission is strictly prohibited.
@@ -1080,43 +1080,47 @@ If the user provides a refinement request, modify only the relevant part without
 
 async function generateImagePrompt(){
 
+  // FIX 2: Use imgpData (set by drag/drop loadImgP) first, fall back to file input
   const fileInput = document.getElementById("imgp-fi");
   const file = fileInput.files[0];
+  const base64Source = imgpData || null; // imgpData is set by drag/drop via loadImgP
 
   const output = document.getElementById("imgp-result");
   const btn = document.getElementById("imgp-btn");
   const context = document.getElementById("imgp-context").value.trim();
 
-  if(!file){
-    alert("Please upload an image");
+  // Need either dragged image (imgpData) or file input file
+  if(!base64Source && !file){
+    alert("Please upload an image first");
     return;
   }
 
-  btn.disabled = true;
-  btn.textContent = "Analyzing image...";
+  const RETRY_MAX = 3;
+  let retryCount = 0;
 
-  // 🔄 Loading UI
-  output.innerHTML = `
-    <div class="fixer-placeholder">
-      <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
-        <div class="loading-dots"><span></span><span></span><span></span></div>
-        <span style="color:var(--muted);font-size:13px;">
-          Processing... Please wait, generating best result...
-        </span>
+  async function runAnalysis(){
+
+    btn.disabled = true;
+    btn.textContent = retryCount === 0 ? "Analyzing image..." : "Retrying...";
+
+    // 🔄 Loading UI
+    output.innerHTML = `
+      <div class="fixer-placeholder">
+        <div style="display:flex;align-items:center;gap:10px;justify-content:center;">
+          <div class="loading-dots"><span></span><span></span><span></span></div>
+          <span style="color:var(--muted);font-size:13px;">
+            ${retryCount === 0 ? 'Processing... Please wait, generating best result...' : 'Retrying... (attempt '+(retryCount+1)+' of '+RETRY_MAX+')'}
+          </span>
+        </div>
       </div>
-    </div>
-  `;
+    `;
 
-  try{
+    try{
 
-    const base64 = await toBase64(file);
+      // FIX 2: Use imgpData from drag/drop if available, else read from file input
+      const base64 = base64Source || await toBase64(file);
 
-    let result = null;
-    let attempts = 0;
-    const maxAttempts = 3;
-
-    while(!result && attempts < maxAttempts){
-
+      // FIX 4: Detect HTTP 500 early before parsing JSON
       const res = await fetch("https://ai-proxy.akashsaha-rock666.workers.dev",{
         method:"POST",
         headers:{ "Content-Type":"application/json" },
@@ -1125,6 +1129,7 @@ async function generateImagePrompt(){
           messages:[
             {
               role:"system",
+              // FIX bonus: use imgpMode (image-to-prompt mode) not imgMode (assignment feedback mode)
               content:`You are a senior visual AI analyst and commercial prompt engineer.
 
 You MUST deeply analyze the image and produce a HIGH-QUALITY result.
@@ -1135,7 +1140,7 @@ DO NOT summarize.
 DO NOT be lazy.
 
 -------------------------------------
-MODE: ${imgMode}
+MODE: ${imgpMode}
 
 -------------------------------------
 MODE INSTRUCTIONS:
@@ -1170,9 +1175,9 @@ STRICT RULES:
 
 - No empty fields
 - No placeholders
-- No generic words like “nice” or “beautiful”
+- No generic words like "nice" or "beautiful"
 - Every line must describe real visual details
-- Be specific (e.g. “top-down angle”, “harsh sunlight from right”)
+- Be specific (e.g. "top-down angle", "harsh sunlight from right")
 
 -------------------------------------
 USER CONTEXT:
@@ -1197,47 +1202,66 @@ NO EXTRA TEXT.`
         })
       });
 
+      // FIX 4: Detect 500 / server error EARLY before parsing body
+      if(!res.ok){
+        throw new Error('SERVER_ERROR_' + res.status);
+      }
+
       const data = await res.json();
       const text = data?.choices?.[0]?.message?.content;
 
-      // ✅ STRICT VALIDATION (IMPROVED)
-      if(text && text.trim().length > 30 && !text.includes("Subject:") && imgMode !== "vocab"){
+      // Validate result
+      let result = null;
+      if(text && text.trim().length > 30 && !text.includes("Subject:") && imgpMode !== "vocab"){
         result = text.trim();
-      } 
-      else if(text && text.trim().length > 30 && imgMode === "vocab"){
-        result = text.trim();
-      } 
-      else {
-        attempts++;
-        await new Promise(r => setTimeout(r, 700));
       }
-    }
+      else if(text && text.trim().length > 30 && imgpMode === "vocab"){
+        result = text.trim();
+      }
 
-    if(!result){
+      if(!result){
+        throw new Error('WEAK_RESPONSE');
+      }
+
+      // ✅ Success
       output.innerHTML = `
-        <span style="color:var(--red)">
-          ⚠️ AI is busy or response was weak. Please try again.
-        </span>
+        <div class="imgp-output-label">
+          ${imgpMode === "vocab" ? "Prompt Breakdown" : "Generated Prompt"}
+        </div>
+        <div class="imgp-output-prompt">${result}</div>
       `;
-      return;
+      btn.disabled = false;
+      btn.textContent = "🖼 Generate Prompt from Image";
+
+    } catch(err){
+      console.error(err);
+      retryCount++;
+
+      // FIX 3 & 4: Show "AI is busy" error early + Retry button
+      const isBusy = err.message && (err.message.includes('SERVER_ERROR') || err.message.includes('WEAK_RESPONSE'));
+      const canRetry = retryCount < RETRY_MAX;
+      const errLabel = isBusy
+        ? '⚠️ AI is busy right now. Please try again.'
+        : '❌ Connection error. Please check your internet and try again.';
+
+      output.innerHTML = `
+        <div style="padding:16px;background:#fef2f2;border:1px solid #fecaca;border-radius:10px;">
+          <div style="font-size:13px;font-weight:700;color:#991b1b;margin-bottom:${canRetry ? '12px' : '0'};">${errLabel}</div>
+          ${canRetry
+            ? `<button onclick="retryImgPrompt()" style="padding:8px 18px;background:var(--purple,#7c3aed);color:#fff;border:none;border-radius:6px;cursor:pointer;font-weight:700;font-size:13px;margin-right:8px;">🔄 Retry (${retryCount}/${RETRY_MAX})</button>`
+            : `<div style="font-size:12px;color:#991b1b;margin-top:4px;">Maximum retries reached. Please wait a moment and refresh the page.</div>`
+          }
+        </div>
+      `;
+      btn.disabled = false;
+      btn.textContent = "🖼 Generate Prompt from Image";
     }
-
-    output.innerHTML = `
-      <div class="imgp-output-label">
-        ${imgMode === "vocab" ? "Prompt Breakdown" : "Generated Prompt"}
-      </div>
-      <div class="imgp-output-prompt">${result}</div>
-    `;
-
-  }catch(err){
-    console.error(err);
-    output.innerHTML = `
-      <span style="color:var(--red)">❌ Error generating prompt</span>
-    `;
   }
 
-  btn.disabled = false;
-  btn.textContent = "🖼 Generate Prompt from Image";
+  // Expose retry function globally so the retry button can call it
+  window.retryImgPrompt = runAnalysis;
+
+  await runAnalysis();
 }
 
 function toBase64(file) {
