@@ -467,6 +467,27 @@ body::before{
     </div>
   </div>
 
+  <!-- RESET PASSWORD PANEL — shown after user clicks email reset link -->
+  <div id="panel-reset" style="display:none">
+    <div style="text-align:center;margin-bottom:24px;">
+      <div style="font-size:40px;margin-bottom:12px;">🔐</div>
+    </div>
+    <h1 class="panel-title">Set new password</h1>
+    <p class="panel-sub">Choose a strong password for your account.</p>
+    <div class="form-group">
+      <label class="form-label">New Password</label>
+      <input type="password" class="form-input" id="reset-password" placeholder="At least 8 characters" autocomplete="new-password">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Confirm New Password</label>
+      <input type="password" class="form-input" id="reset-password-confirm" placeholder="Repeat your new password" autocomplete="new-password" onkeydown="if(event.key==='Enter')doResetPassword()">
+    </div>
+    <button class="btn-primary" id="reset-btn" onclick="doResetPassword()">Update Password →</button>
+    <div class="terms-line" style="margin-top:14px;">
+      Remembered it? <a href="#" onclick="switchTab('login');return false;">Back to login →</a>
+    </div>
+  </div>
+
 </div>
 
 <!-- BACK LINK -->
@@ -499,6 +520,17 @@ const { createClient } = supabase;
 const db = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 (async () => {
+  // Check for password recovery token in URL (user clicked reset email link)
+  const hashParams = new URLSearchParams(window.location.hash.replace('#', '?'));
+  const tokenType = hashParams.get('type');
+  if (tokenType === 'recovery') {
+    // Hide tabs, show reset panel
+    document.getElementById('tab-login').style.display = 'none';
+    document.getElementById('tab-signup').style.display = 'none';
+    document.getElementById('panel-login').style.display = 'none';
+    document.getElementById('panel-reset').style.display = 'block';
+    return;
+  }
   const { data: { session } } = await db.auth.getSession();
   if (session) { window.location.href = 'app.html'; return; }
   if (window.location.hash === '#signup') switchTab('signup');
@@ -584,6 +616,27 @@ async function doForgot() {
   showAlert('Reset link sent! Check your inbox.', 'success');
 }
 
+async function doResetPassword() {
+  const pass = document.getElementById('reset-password').value;
+  const confirm = document.getElementById('reset-password-confirm').value;
+  hideAlert();
+  if (pass.length < 8) { showAlert('Password must be at least 8 characters.'); return; }
+  if (pass !== confirm) { showAlert('Passwords do not match. Please try again.'); return; }
+  setLoading('reset-btn', true, 'Update Password →');
+  const { error } = await db.auth.updateUser({ password: pass });
+  setLoading('reset-btn', false, 'Update Password →');
+  if (error) { showAlert(error.message); return; }
+  // Success — show confirmation then redirect to app
+  document.getElementById('panel-reset').innerHTML = `
+    <div style="text-align:center;padding:20px 0;">
+      <div style="font-size:52px;margin-bottom:16px;">✅</div>
+      <div style="font-family:'Fraunces',serif;font-size:21px;font-weight:900;color:var(--n900);margin-bottom:8px;">Password updated!</div>
+      <div style="font-size:14px;color:var(--n500);margin-bottom:24px;">Redirecting you to the app...</div>
+    </div>
+  `;
+  setTimeout(() => { window.location.href = 'app.html'; }, 2000);
+}
+
 async function signInGoogle() {
   const { error } = await db.auth.signInWithOAuth({
     provider: 'google',
@@ -607,7 +660,7 @@ const LEGAL = {
   },
   privacy: {
     sub: 'Privacy Policy — Last updated May 2026',
-    html: `<h2>Privacy Policy</h2><h3>What We Collect</h3><ul><li><strong>Email address</strong> — to create and secure your account</li><li><strong>Name</strong> — to personalise your experience</li><li><strong>Course progress</strong> — Stored data in cloud database, never on your local device</li></ul><h3>What We Never Do</h3><ul><li>❌ Never sell your data to anyone</li><li>❌ Never share your email with third parties</li><li>❌ Never send spam or marketing emails</li><li>❌ Never store your AI prompts or submissions</li></ul><h3>Data Storage</h3><p>Account data is securely stored via <strong>Supabase</strong> — an enterprise-grade platform with industry-standard encryption. Course progress stays only in your browser.</p><h3>Google Sign In</h3><p>If you sign in with Google, we only receive your name and email. We cannot access your Gmail, Drive, contacts, or any other Google data.</p><h3>Your Rights</h3><p>You can request deletion of your account and all data anytime by emailing <a href="mailto:akashworking66@gmail.com">akashworking66@gmail.com</a></p><h3>Cookies</h3><p>We use only essential authentication cookies. No tracking or advertising cookies.</p>`
+    html: `<h2>Privacy Policy</h2><h3>What We Collect</h3><ul><li><strong>Email address</strong> — to create and secure your account</li><li><strong>Name</strong> — to personalise your experience</li><li><strong>Course progress</strong> — stored locally on your device only, never on our servers</li></ul><h3>What We Never Do</h3><ul><li>❌ Never sell your data to anyone</li><li>❌ Never share your email with third parties</li><li>❌ Never send spam or marketing emails</li><li>❌ Never store your AI prompts or submissions</li></ul><h3>Data Storage</h3><p>Account data is securely stored via <strong>Supabase</strong> — an enterprise-grade platform with industry-standard encryption. Course progress stays only in your browser.</p><h3>Google Sign In</h3><p>If you sign in with Google, we only receive your name and email. We cannot access your Gmail, Drive, contacts, or any other Google data.</p><h3>Your Rights</h3><p>You can request deletion of your account and all data anytime by emailing <a href="mailto:akashworking66@gmail.com">akashworking66@gmail.com</a></p><h3>Cookies</h3><p>We use only essential authentication cookies. No tracking or advertising cookies.</p>`
   }
 };
 function showLegalModal(type) {
