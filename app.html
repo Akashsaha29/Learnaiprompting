@@ -2,16 +2,6 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  
-  <!-- Google Analytics -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-8MFW03T392"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-8MFW03T392');
-</script>
-  
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <!-- ═══ SEO ═══════════════════════════════════════════════════════════ -->
@@ -371,23 +361,7 @@
       </div>
     </div>
 
-    <!-- Mode: TTV vs I2V -->
-    <div class="video-mode-selector">
-      <div class="vts-label">Generation mode:</div>
-      <div class="vts-row">
-        <button class="vts-btn active" id="vmode-ttv" onclick="setVideoMode('ttv')" style="flex:1;">
-          <span style="font-size:20px;">📝</span>
-          <div><div class="vts-name">Text → Video</div><div class="vts-desc">Full scene from scratch — describe everything</div></div>
-        </button>
-        <button class="vts-btn" id="vmode-i2v" onclick="setVideoMode('i2v')" style="flex:1;">
-          <span style="font-size:20px;">🖼→🎬</span>
-          <div><div class="vts-name">Image → Video</div><div class="vts-desc">Animate a still — describe motion only</div></div>
-        </button>
-      </div>
-      <div id="i2v-note" style="display:none;margin-top:8px;padding:10px 14px;background:#fef3c7;border:1px solid #f59e0b;border-radius:8px;font-size:12px;color:#92400e;">
-        <strong>Image-to-Video Rule:</strong> Never redescribe what's already in the image. Only describe what should MOVE and HOW. The AI reads the image itself.
-      </div>
-    </div>
+
 
     <div class="video-builder-layout">
       <!-- LEFT: Steps -->
@@ -397,15 +371,40 @@
         <div class="vb-step-card" id="vbs-scene">
           <div class="vbs-head">
             <div class="vbs-num">0</div>
-            <div><div class="vbs-title">Scene & Subject</div><div class="vbs-sub">What are we looking at? Be specific.</div></div>
+            <div><div class="vbs-title">Scene & Subject</div><div class="vbs-sub">The better you describe it, the better the video</div></div>
           </div>
-          <input type="text" class="builder-subject-input" id="vb-scene" placeholder="e.g. A premium Boat headphone sitting half-buried in desert sand, golden dunes, cinematic..." oninput="updateVideoPrompt()" style="margin-top:8px;" />
-          <div class="builder-subject-examples" style="margin-top:8px;">
-            <span class="bsubj-chip" onclick="setVbScene('Premium wireless headphones half-buried in desert sand, dramatic dunes')">🎧 Product desert</span>
-            <span class="bsubj-chip" onclick="setVbScene('25-year-old woman walking in luxury hotel corridor, confident stride')">👤 Person walk</span>
-            <span class="bsubj-chip" onclick="setVbScene('Luxury perfume bottle on wet black marble, mist rising')">🧴 Product mist</span>
-            <span class="bsubj-chip" onclick="setVbScene('Electric sports car on mountain road at golden hour')">🚗 Car drive</span>
-            <span class="bsubj-chip" onclick="setVbScene('Coffee being poured into cup, slow motion steam rising')">☕ Coffee pour</span>
+
+          <!-- Category chips -->
+          <div style="margin-top:10px;margin-bottom:8px;">
+            <div style="font-size:11px;font-weight:800;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;margin-bottom:7px;">Pick a scene type to get started:</div>
+            <div style="display:flex;flex-wrap:wrap;gap:6px;">
+              <span class="bsubj-chip" style="background:#eff6ff;color:#2563eb;border:1px solid #bfdbfe;font-weight:700;" onclick="setVbScene('A sleek premium wireless headphone placed on polished black marble, soft studio spotlight overhead, condensation droplets on the surface, minimal dark background')">💎 Product Shot</span>
+              <span class="bsubj-chip" style="background:#fdf4ff;color:#7c3aed;border:1px solid #e9d5ff;font-weight:700;" onclick="setVbScene('A confident 25-year-old woman in a flowing silk dress walking through a sunlit luxury hotel corridor, warm light streaming through tall windows')">👗 Fashion / Lifestyle</span>
+              <span class="bsubj-chip" style="background:#fff7ed;color:#c2410c;border:1px solid #fed7aa;font-weight:700;" onclick="setVbScene('Rich dark espresso being poured slowly into a white ceramic cup, steam curling upward, dark moody kitchen background, slow motion')">☕ Food & Drink</span>
+              <span class="bsubj-chip" style="background:#f0fdf4;color:#166534;border:1px solid #bbf7d0;font-weight:700;" onclick="setVbScene('Thick white smoke rising slowly from a luxury incense stick, dark minimal background, single side light catching the smoke curves')">🌫️ Atmosphere / Smoke</span>
+              <span class="bsubj-chip" style="background:#fff1f2;color:#be123c;border:1px solid #fecdd3;font-weight:700;" onclick="setVbScene('A young man in a tailored charcoal suit walking confidently down a rain-slicked city street at night, neon reflections on the wet pavement')">🚶 Character</span>
+              <span class="bsubj-chip" style="background:#ecfdf5;color:#047857;border:1px solid #a7f3d0;font-weight:700;" onclick="setVbScene('Golden wheat field at magic hour, gentle breeze moving through the grain, warm amber light, vast open sky with soft clouds')">🌅 Landscape</span>
+            </div>
+          </div>
+
+          <!-- Scene input -->
+          <input type="text" class="builder-subject-input" id="vb-scene"
+            placeholder="e.g. A luxury perfume bottle on wet black marble, single spotlight overhead, dark background, condensation droplets catching light..."
+            oninput="updateVideoPrompt()" style="margin-top:4px;" />
+
+          <!-- Writing guidance -->
+          <div style="margin-top:8px;padding:10px 12px;background:#f8faff;border:1px solid #dbeafe;border-radius:8px;font-size:12px;color:#334155;line-height:1.6;">
+            <div style="font-weight:800;color:#2563eb;margin-bottom:4px;">✍️ Write like a film director — include:</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:2px 12px;">
+              <span>• What the subject is exactly</span>
+              <span>• What material / texture it has</span>
+              <span>• Where it is placed / environment</span>
+              <span>• Time of day or mood</span>
+            </div>
+            <div style="margin-top:5px;padding-top:5px;border-top:1px solid #dbeafe;">
+              <span style="color:#64748b;">❌ Weak: </span><span style="color:#dc2626;">"a bottle on marble"</span>
+              <span style="margin-left:8px;color:#64748b;">✅ Strong: </span><span style="color:#059669;">"a frosted glass perfume bottle on cold black marble, single shaft of light from above, condensation forming on the glass"</span>
+            </div>
           </div>
         </div>
 
@@ -499,6 +498,40 @@
           </div>
         </div>
 
+        <!-- STEP 6: Music & Audio -->
+        <div class="vb-step-card" id="vbs-vaudio">
+          <div class="vbs-head">
+            <div class="vbs-num">6</div>
+            <div><div class="vbs-title">Music & Audio</div><div class="vbs-sub">Optional — adds audio direction to your prompt</div></div>
+          </div>
+          <div class="vbs-options" id="vbs-vaudio-opts">
+
+            <!-- Music moods -->
+            <div class="vbs-opt" data-step="vaudio" data-val="background score: cinematic orchestral swell, building tension, no lyrics" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🎻 Cinematic Orchestra</div><div class="vbs-opt-tip">Epic, trailer, emotional</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="background score: deep minimal electronic pulse, dark synth pads, subtle bass rumble" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🎛️ Dark Electronic</div><div class="vbs-opt-tip">Tech, luxury, moody</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="background score: warm acoustic guitar, soft piano keys, gentle and lifestyle" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🎸 Warm Acoustic</div><div class="vbs-opt-tip">Lifestyle, natural, human</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="background score: upbeat lo-fi hip hop, relaxed rhythm, soft vinyl crackle" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🎵 Lo-Fi Hip Hop</div><div class="vbs-opt-tip">Casual, social media, chill</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="background score: high-energy electronic dance, punchy kick drum, energetic build" onclick="selectVbOpt(this)"><div class="vbs-opt-name">⚡ High Energy EDM</div><div class="vbs-opt-tip">Action, sports, hype</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="background score: luxury jazz, brushed drums, upright bass, sophisticated tone" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🎷 Luxury Jazz</div><div class="vbs-opt-tip">Premium brand, elegant</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="background score: Bollywood orchestral fusion, sitars and strings, cinematic energy" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🪘 Bollywood Fusion</div><div class="vbs-opt-tip">Indian commercial, festive</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="background score: deep ambient drone, slow evolving pads, atmospheric and meditative" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🌊 Ambient Drone</div><div class="vbs-opt-tip">Nature, meditation, slow</div></div>
+
+            <!-- SFX / Natural sounds -->
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: natural SFX only — no music. Include realistic ambient sound matching the environment" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🔇 Natural SFX Only</div><div class="vbs-opt-tip">No music — realistic ambient</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: car engine roar, tyre screech on tarmac, wind rush, mechanical rev" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🚗 Car / Vehicle SFX</div><div class="vbs-opt-tip">Engine, tyres, mechanical</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: rain on surface, distant thunder, water droplets, wet ambient" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🌧️ Rain & Thunder SFX</div><div class="vbs-opt-tip">Wet, moody, atmospheric</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: forest ambience, birds, rustling leaves, light wind through trees" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🌿 Nature / Forest SFX</div><div class="vbs-opt-tip">Birds, leaves, wind</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: busy city street, distant traffic, footsteps on wet pavement, urban hum" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🏙️ Urban City SFX</div><div class="vbs-opt-tip">Street, traffic, crowd</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: dog barking naturally in distance, light footsteps, outdoor residential ambience" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🐕 Dog & Animal SFX</div><div class="vbs-opt-tip">Natural animal, outdoor</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: liquid pour and splash, glass clink, subtle sizzle, kitchen ambience" onclick="selectVbOpt(this)"><div class="vbs-opt-name">💧 Liquid & Kitchen SFX</div><div class="vbs-opt-tip">Pour, splash, sizzle</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: impact hit, shatter, debris scatter, force-driven collision sound physics" onclick="selectVbOpt(this)"><div class="vbs-opt-name">💥 Impact & Shatter SFX</div><div class="vbs-opt-tip">Hit, break, collision</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: crowd cheering, running footsteps on track, physical exertion, sports arena atmosphere" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🏃 Sports & Action SFX</div><div class="vbs-opt-tip">Crowd, running, exertion</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="sound design: ocean waves, seagulls, salt wind, beach ambience" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🌊 Ocean & Beach SFX</div><div class="vbs-opt-tip">Waves, birds, wind</div></div>
+            <div class="vbs-opt" data-step="vaudio" data-val="no audio — silent video, no music or sound effects" onclick="selectVbOpt(this)"><div class="vbs-opt-name">🔕 No Audio</div><div class="vbs-opt-tip">Silent — add your own audio</div></div>
+
+          </div>
+        </div>
+
       </div>
 
       <!-- RIGHT: Live Prompt Panel -->
@@ -528,9 +561,12 @@
         </div>
 
         <div class="bp-actions">
-          <button type="button" class="bp-copy" onclick="copyVideoPrompt(event)"> 📋 Copy Video Prompt </button>
-          <button type="button" class="bp-clear" onclick="clearVideoBuilder(event)"> ↺ Reset </button>
+          <button type="button" class="bp-copy" onclick="copyVideoPrompt(event)">📋 Copy Prompt</button>
+          <button type="button" class="bp-copy" id="vb-enhance-btn" onclick="enhanceVideoPrompt(event)" style="background:linear-gradient(135deg,#7c3aed,#2563eb);color:#fff;border:none;">✨ Enhance & Copy</button>
+          <button type="button" class="bp-clear" onclick="clearVideoBuilder(event)">↺ Reset</button>
         </div>
+        <!-- Enhance status -->
+        <div id="vb-enhance-status" style="display:none;margin-top:8px;padding:10px 12px;background:#f5f3ff;border:1px solid #ddd6fe;border-radius:8px;font-size:12px;color:#5b21b6;font-weight:600;"></div>
         <div class="try-it-panel" style="margin-top:12px;">
           <div class="try-it-label">🎬 Test this prompt — free video AI tools</div>
           <div class="try-it-links">
