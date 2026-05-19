@@ -645,51 +645,37 @@ function updateVideoPrompt(){
   const scene=(document.getElementById('vb-scene')||{}).value||'';
   const endpoint=(document.getElementById('vb-endpoint')||{}).value||'';
   const s=vbSelections;
-  const isI2V=vbMode==='i2v';
 
-  const parts=[];
-  const score={scene:scene.trim().length>5?1:0};
-
-  // Build prompt based on mode
-  if(isI2V){
-    // I2V: start with camera, then motion only
-    if(s.camera){parts.push(s.camera);score.camera=1;}
-    if(s.motion){parts.push(s.motion);score.motion=1;}
-    if(endpoint.trim()) parts.push(endpoint.trim());
-    if(s.vlight){parts.push('lighting: '+s.vlight);score.vlight=1;}
-    if(s.vformat){parts.push(s.vformat);score.vformat=1;}
-  } else {
-    // TTV: full scene description
-    if(scene.trim()) parts.push(scene.trim());
-    if(s.camera){parts.push('Camera: '+s.camera);score.camera=1;}
-    if(s.motion){parts.push(s.motion+(endpoint.trim()?', '+endpoint.trim():''));score.motion=1;}
-    if(s.vlight){parts.push(s.vlight);score.vlight=1;}
-    if(s.vstyle){parts.push(s.vstyle);score.vstyle=1;}
-    if(s.vformat){parts.push(s.vformat);score.vformat=1;}
-  }
+  const score={
+    scene:   scene.trim().length>5 ? 1 : 0,
+    camera:  s.camera  ? 1 : 0,
+    motion:  s.motion  ? 1 : 0,
+    vlight:  s.vlight  ? 1 : 0,
+    vstyle:  s.vstyle  ? 1 : 0,
+    vformat: s.vformat ? 1 : 0,
+    vaudio:  s.vaudio  ? 1 : 0,
+  };
 
   const filled=Object.values(score).filter(Boolean).length;
-  const maxScore=isI2V?4:6;
-  const scoreLabels=['Start typing ↑','Add camera move','Add motion','Add lighting','Strong!','Expert!','Master! 🏆'];
-  const idx=Math.min(filled,6);
+  const scoreLabels=['Start typing ↑','Add camera move','Add motion','Add lighting','Add style','Strong!','Expert!','Master! 🏆'];
+  const idx=Math.min(filled,7);
 
   const liveEl=document.getElementById('vb-live');
   if(liveEl){
-    if(!parts.length){
+    if(!scene.trim() && !s.camera && !s.motion){
       liveEl.innerHTML='<span style="color:#94a3b8;font-style:italic;">Type your scene above, then select camera and motion...</span>';
     } else {
-      // Color-coded tokens
-      const colorMap={camera:'#8b5cf6',motion:'#10b981',vlight:'#f59e0b',vstyle:'#2563eb',vformat:'#64748b'};
       let html='';
       if(scene.trim()) html+='<span style="background:#dbeafe;color:#1d4ed8;padding:2px 6px;border-radius:4px;margin:2px;font-size:12px;">'+scene.trim()+'</span> ';
       if(s.camera) html+='<span style="background:#ede9fe;color:#7c3aed;padding:2px 6px;border-radius:4px;margin:2px;font-size:12px;">📷 '+s.camera+'</span> ';
       if(s.motion){
-        const motionText=s.motion+(endpoint.trim()?', '+endpoint.trim():'');
-        html+='<span style="background:#d1fae5;color:#065f46;padding:2px 6px;border-radius:4px;margin:2px;font-size:12px;">🏃 '+motionText+'</span> ';
+        const mt=s.motion+(endpoint.trim()?', '+endpoint.trim():'');
+        html+='<span style="background:#d1fae5;color:#065f46;padding:2px 6px;border-radius:4px;margin:2px;font-size:12px;">🏃 '+mt+'</span> ';
       }
       if(s.vlight) html+='<span style="background:#fef3c7;color:#92400e;padding:2px 6px;border-radius:4px;margin:2px;font-size:12px;">💡 '+s.vlight+'</span> ';
       if(s.vstyle) html+='<span style="background:#eff6ff;color:#1d4ed8;padding:2px 6px;border-radius:4px;margin:2px;font-size:12px;">🎬 '+s.vstyle+'</span> ';
-      if(s.vformat) html+='<span style="background:#f8fafc;color:#64748b;padding:2px 6px;border-radius:4px;margin:2px;font-size:12px;">📐 '+s.vformat+'</span>';
+      if(s.vformat) html+='<span style="background:#f8fafc;color:#64748b;padding:2px 6px;border-radius:4px;margin:2px;font-size:12px;">📐 '+s.vformat+'</span> ';
+      if(s.vaudio) html+='<span style="background:#fdf4ff;color:#7c3aed;padding:2px 6px;border-radius:4px;margin:2px;font-size:12px;">🎵 '+s.vaudio.split(':')[0]+'</span>';
       liveEl.innerHTML=html;
     }
   }
@@ -702,106 +688,269 @@ function updateVideoPrompt(){
 
 async function copyVideoPrompt(e){
 
-  if(e){
-    e.preventDefault();
-    e.stopPropagation();
-  }
+  if(e){ e.preventDefault(); e.stopPropagation(); }
 
-  const scene =
-    (document.getElementById('vb-scene') || {}).value || '';
+  const scene    = (document.getElementById('vb-scene')||{}).value||'';
+  const endpoint = (document.getElementById('vb-endpoint')||{}).value||'';
+  const s        = vbSelections || {};
 
-  const endpoint =
-    (document.getElementById('vb-endpoint') || {}).value || '';
-
-  const s = vbSelections || {};
-
-  const isI2V = vbMode === 'i2v';
-
-  const parts = [];
-
-  if(!isI2V && scene.trim()){
-    parts.push(scene.trim());
-  }
-
-  if(s.camera){
-    parts.push(
-      (isI2V ? '' : 'Camera: ') + s.camera
-    );
-  }
-
-  if(s.motion){
-
-    parts.push(
-      s.motion +
-      (endpoint.trim() ? ', ' + endpoint.trim() : '')
-    );
-
-  }
-
-  if(s.vlight){
-    parts.push(s.vlight);
-  }
-
-  if(s.vstyle && !isI2V){
-    parts.push(s.vstyle);
-  }
-
-  if(s.vformat){
-    parts.push(s.vformat);
-  }
-
-  if(!parts.length){
-
-    alert(
-      'Add a scene description and select at least one video option.'
-    );
-
+  if(!scene.trim() && !s.camera && !s.motion){
+    alert('Add a scene description and select at least one video option.');
     return;
   }
 
-  const neg =
-    'Negative: blurry, static shot, distorted limbs, low quality, watermark';
-
-  const full =
-    parts.join('. ') + '. ' + neg;
+  const full = buildVideoPrompt(scene, endpoint, s);
 
   try{
-
     await navigator.clipboard.writeText(full);
-
-    const btn =
-      (e && e.currentTarget) ? e.currentTarget : document.querySelector('#btool-video .bp-copy');
-
+    const btn = (e && e.currentTarget) ? e.currentTarget : document.querySelector('#btool-video .bp-copy');
     if(btn){
-
-      const original =
-        btn.innerHTML;
-
-      btn.innerHTML =
-        '✅ Copied!';
-
+      const orig = btn.innerHTML;
+      btn.innerHTML = '✅ Copied!';
       btn.style.opacity = '0.92';
-
-      setTimeout(()=>{
-
-        btn.innerHTML = original;
-
-        btn.style.opacity = '1';
-
-      },2000);
-
+      setTimeout(()=>{ btn.innerHTML = orig; btn.style.opacity = '1'; }, 2000);
     }
-
   }catch(err){
-
     console.error(err);
-
-    alert(
-      'Clipboard copy failed. Browser blocked access.'
-    );
-
+    alert('Clipboard copy failed. Browser blocked access.');
   }
 }
+
+// ─────────────────────────────────────────────────────────────────────────────
+// buildVideoPrompt — assembles the full professional prompt from all selections
+// Used by both Copy and Enhance buttons
+// ─────────────────────────────────────────────────────────────────────────────
+function buildVideoPrompt(scene, endpoint, s){
+
+  const toolName = { kling:'Kling 2.6', runway:'Runway Gen-4.5', veo:'Veo 3.1' }[vbTool] || 'Kling 2.6';
+  const sceneLC  = scene.toLowerCase();
+
+  // ── SMART PHYSICS — auto-detected from scene keywords ────────────────────
+  const physicsMap = [
+    { keys:['bullet','shot','shoot','gunshot','projectile','fires','shooting'],
+      inject:'high-velocity projectile impact with kinetic energy transfer, point-of-contact deformation radiating outward, material stress fracture lines visible, micro-debris ejection at correct ballistic angles, shockwave ripple propagating through surface' },
+    { keys:['explode','explosion','blast','detonate','blow up','blows up'],
+      inject:'pressure-wave propagation expanding outward from epicentre, debris fragments with individual mass and drag physics, heat distortion shimmer, particle system: smoke sparks and ash with accurate terminal velocity' },
+    { keys:['crash','smash','collide','collision','crush','crumple'],
+      inject:'collision force distributed across contact surface, crumple-zone deformation with correct material yield points, secondary motion from energy transfer, surface paint micro-fracture and flake physics' },
+    { keys:['shatter','fracture','crack','splinter'],
+      inject:'fracture propagation following material grain lines from impact point, individual shard physics with correct mass and trajectory, stress-crack network spreading at realistic propagation speed' },
+    { keys:['car','vehicle','truck','motorcycle','ferrari','lamborghini','porsche','bmw','mercedes'],
+      inject:'vehicle chassis weight simulation, suspension travel and body roll physics, tyre contact patch deformation, surface paint and clearcoat material response to light' },
+    { keys:['pour','splash','drip','flow','spill'],
+      inject:'fluid simulation with accurate viscosity and surface tension, meniscus formation at edges, refraction and caustics as light passes through, droplet size distribution physically accurate' },
+    { keys:['fire','flame','burn','burning','ember','torch','candle'],
+      inject:'combustion simulation with buoyancy-driven convection, flame core hotter and brighter than outer plume, smoke density variation with temperature, heat distortion lensing effect above flame' },
+  ];
+  let physicsInject = '';
+  for(const p of physicsMap){
+    if(p.keys.some(k => sceneLC.includes(k))){ physicsInject = p.inject; break; }
+  }
+
+  // ── SMART MATERIAL — auto-detected from scene keywords ───────────────────
+  const materialMap = [
+    { keys:['metal','steel','iron','chrome','aluminium','aluminum','titanium'],
+      inject:'metal surface: anisotropic specular highlight, edge-lit micro-scratches visible, reflection distorts with surface curvature' },
+    { keys:['glass','crystal','transparent','bottle'],
+      inject:'glass material: internal refraction caustics, Fresnel reflection increases at grazing angles, internal surface depth visible' },
+    { keys:['marble','stone','concrete','granite'],
+      inject:'stone surface: subsurface micro-crystalline structure catches raking light, vein network visible under specular' },
+    { keys:['leather','silk','fabric','cloth','velvet','suede'],
+      inject:'textile surface: micro-fibre sheen direction-dependent, fabric weight affects drape, light absorption accurate to material type' },
+    { keys:['wet','rain','damp','submerged'],
+      inject:'wet surface: specular reflectivity increased 3x, water film surface tension bead formation, background reflection distorted by surface ripple' },
+  ];
+  let materialInject = '';
+  for(const m of materialMap){
+    if(m.keys.some(k => sceneLC.includes(k))){ materialInject = m.inject; break; }
+  }
+
+  // ── SMART CINEMATIC LENS — auto-detected from scene keywords ─────────────
+  const cinematicMap = [
+    { keys:['product','headphone','watch','perfume','bottle','skincare','shoe','jewellery','jewelry','ring'],
+      inject:'macro lens proximity, extreme shallow depth of field f/1.4, focus rack from background to product surface detail' },
+    { keys:['portrait','face','woman','man','model','character'],
+      inject:'85mm portrait lens, f/1.8 shallow depth, subject separated from background, catch-light in eyes' },
+    { keys:['landscape','city','skyline','aerial','drone','mountain','ocean','wide'],
+      inject:'ultra-wide 16mm lens, deep depth of field f/8, atmospheric haze adds depth layers' },
+    { keys:['car','vehicle','motorcycle','race','speed'],
+      inject:'low angle 24mm lens, rolling shutter on fast elements, motion blur streaks on background' },
+    { keys:['food','coffee','drink','pour','honey','chocolate'],
+      inject:'50mm macro lens overhead or 45-degree angle, f/2.8, steam and condensation in sharp focus' },
+    { keys:['action','fight','run','chase','explosion','impact'],
+      inject:'24mm handheld energy, f/2.8, fast shutter 1/500s freezes peak-action moments, motion blur on secondary elements only' },
+  ];
+  let cinematicInject = '';
+  for(const c of cinematicMap){
+    if(c.keys.some(k => sceneLC.includes(k))){ cinematicInject = c.inject; break; }
+  }
+
+  // ── CAMERA enriched ───────────────────────────────────────────────────────
+  const cameraMap = {
+    'slow push-in dolly toward subject':             'slow cinematic dolly push-in toward subject, camera closing distance steadily, focal compression increasing',
+    'slow pull-out dolly away from subject':          'slow cinematic dolly pull-back revealing full environment, subject diminishing into scene',
+    'smooth lateral tracking shot following subject': 'smooth lateral tracking shot, camera gliding parallel to subject direction of motion',
+    'slow orbital arc shot circling subject clockwise':'slow 180-degree orbital arc circling subject clockwise, continuous parallax on background',
+    'drone ascending shot rising above subject':      'drone ascending from ground level, rising vertically to bird\'s-eye, scale increasing dramatically',
+    'smooth pan left across scene':                   'smooth horizontal pan left, camera pivoting on fixed axis, environment scrolling across frame',
+    'slow tilt up from low angle to sky':             'slow tilt up beginning at extreme low angle, rising to reveal sky, camera pivoting vertically',
+    'static locked-off shot, no camera movement':     'static locked-off tripod shot, zero camera movement, all motion from subject only',
+    'low angle ground-level shot looking up at subject':'extreme low angle, camera at ground level looking upward, subject looms dominant in frame',
+    'handheld camera with subtle natural shake':      'handheld camera, subtle organic micro-shake, natural human breathing rhythm, documentary intimacy'
+  };
+
+  // ── MOTION enriched ───────────────────────────────────────────────────────
+  const motionMap = {
+    'subject remains completely still, subtle ambient motion only':              'subject completely static, ambient particle motion only — floating dust motes, micro-flicker in light source',
+    'fabric and hair moves gently in soft breeze, then settles back into place': 'fabric billows gently in soft breeze with realistic weight and inertia, settles back naturally',
+    'liquid pours or splashes with realistic physics, droplets scatter naturally':'liquid pours with accurate fluid physics, surface tension visible, droplets catching light as they scatter',
+    'character walks forward with confident natural gait, weight and momentum realistic':'character walks with confident natural stride, full weight shift, heel-to-toe contact, arm swing in rhythm',
+    'slow motion, 240fps equivalent speed reduction, every detail visible':      'extreme slow motion, 240fps speed reduction, every micro-detail visible — fabric ripple, liquid suspension, particle freeze',
+    'object emerges from surface, rising upward with weight and gravity':         'object emerges slowly from surface, gravity-correct upward momentum, material releasing from contact point',
+    'smoke, mist, or steam rises and drifts slowly, atmospheric volumetric':     'volumetric smoke or steam rising with realistic density, drifting with atmospheric air current, god-ray interaction',
+    'explosion or impact with realistic physical forces, debris scatters with weight':'force-driven impact, realistic debris scatter with individual object physics, shockwave displacement visible'
+  };
+
+  // ── COLOUR GRADE — derived from lighting ─────────────────────────────────
+  const colourMap = {
+    'golden hour warm light, long shadows, warm amber glow':                        'warm amber-orange colour grade, lifted shadows, filmic halation on highlights',
+    'dramatic single shaft of light from above, deep shadow 80%, chiaroscuro':     'high contrast grade, crushed blacks to true zero, single hard specular highlight, no fill',
+    'neon sign color spill, blue and pink neon reflections on wet surface':        'cyan-magenta neon grade, wet surface specular bloom, deep night blacks, no ambient fill',
+    'volumetric god rays through fog, atmospheric depth, sun rays visible in air': 'hazy atmospheric grade, soft bloom on highlights, low-contrast mist, warm-to-cool depth gradient',
+    'clean white studio lighting, large softbox, even illumination, no harsh shadows':'clean neutral grade, balanced 18% grey exposure, slight warmth in mid-tones',
+    'blue hour twilight, deep blue sky, city lights emerging, cool tones':         'deep blue-teal grade, warm tungsten practicals vs cool ambient, lifted shadow detail'
+  };
+  const colourGrade = colourMap[s.vlight] || '';
+
+  // ── QUALITY suffix — per tool ─────────────────────────────────────────────
+  const qualitySuffix = {
+    kling:  'photorealistic, 4K cinematic quality, sharp focus on primary subject, no morphing, no distortion',
+    runway: 'physically accurate, 4K photorealistic render, simulation-grade motion, no artefacts',
+    veo:    'photorealistic, 4K, natural ambient audio, cinematic colour science, no compression artefacts'
+  }[vbTool] || 'photorealistic, 4K cinematic quality';
+
+  // ── NEGATIVE prompt — per tool ────────────────────────────────────────────
+  const negPrompt = {
+    kling:  '--neg blurry, morphing faces, distorted limbs, camera jitter, floating elements, low quality, watermark, text',
+    runway: '--neg blurry, incorrect physics, objects floating, unnatural deformation, low quality, watermark, text',
+    veo:    '--neg blurry, unnatural motion, bad anatomy, camera shake, audio sync fail, low quality, watermark'
+  }[vbTool] || '--neg blurry, low quality, watermark';
+
+  const richCamera = cameraMap[s.camera||''] || s.camera || '';
+  const richMotion = motionMap[s.motion||''] || s.motion || '';
+  const motionFull = richMotion + (endpoint.trim() ? ', ' + endpoint.trim() : '');
+
+  // ── ASSEMBLE ──────────────────────────────────────────────────────────────
+  const parts = [];
+  if(scene.trim())      parts.push(scene.trim());
+  if(physicsInject)     parts.push('Physics: ' + physicsInject);
+  if(materialInject)    parts.push('Material: ' + materialInject);
+  if(richCamera)        parts.push('Camera: ' + richCamera);
+  if(cinematicInject)   parts.push('Lens: ' + cinematicInject);
+  if(motionFull.trim()) parts.push('Motion: ' + motionFull);
+  if(s.vlight)          parts.push('Lighting: ' + s.vlight);
+  if(colourGrade)       parts.push('Colour grade: ' + colourGrade);
+  if(s.vstyle)          parts.push(s.vstyle);
+  if(s.vaudio)          parts.push('Audio: ' + s.vaudio);
+  if(s.vformat)         parts.push('Format: ' + s.vformat);
+  parts.push(qualitySuffix);
+
+  return '// ' + toolName + ' prompt\n' + parts.join('. ') + '. ' + negPrompt;
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// enhanceVideoPrompt — sends assembled prompt to AI for professional rewrite
+// ─────────────────────────────────────────────────────────────────────────────
+async function enhanceVideoPrompt(e){
+
+  if(e){ e.preventDefault(); e.stopPropagation(); }
+
+  const scene    = (document.getElementById('vb-scene')||{}).value||'';
+  const endpoint = (document.getElementById('vb-endpoint')||{}).value||'';
+  const s        = vbSelections || {};
+
+  if(!scene.trim()){
+    alert('Please type a scene description first before enhancing.');
+    return;
+  }
+
+  const btn       = document.getElementById('vb-enhance-btn');
+  const statusEl  = document.getElementById('vb-enhance-status');
+  const rawPrompt = buildVideoPrompt(scene, endpoint, s);
+  const toolName  = { kling:'Kling 2.6', runway:'Runway Gen-4.5', veo:'Veo 3.1' }[vbTool] || 'Kling 2.6';
+
+  btn.disabled     = true;
+  btn.textContent  = '⏳ Enhancing...';
+  statusEl.style.display = 'block';
+  statusEl.textContent   = 'AI is rewriting your prompt as a professional video brief...';
+
+  try{
+    const res = await fetch('https://ai-proxy.akashsaha-rock666.workers.dev', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        messages: [
+          {
+            role: 'system',
+            content: `You are a world-class video director and AI prompt engineer specialising in ${toolName}.
+
+Your job: take the structured video prompt below and rewrite it as ONE single cohesive professional video production brief written in flowing prose — the way a real film director or commercial production house would brief a video AI tool.
+
+RULES:
+- Write as one continuous paragraph or 2-3 short focused paragraphs — NO bullet points, NO labels like "Camera:", "Motion:" etc.
+- Preserve every technical detail from the input — do not remove physics, material, lens, lighting, colour grade, or audio details
+- Make it read naturally and cinematically — like a director briefing a DP
+- Keep all negative prompt instructions at the end after "--neg"
+- Do not add any explanation or preamble — output ONLY the final prompt
+- Start with "// ${toolName} prompt" on its own line, then the prompt
+
+INPUT PROMPT:
+${rawPrompt}`
+          },
+          {
+            role: 'user',
+            content: 'Rewrite this as a professional cinematic video prompt now.'
+          }
+        ]
+      })
+    });
+
+    if(!res.ok) throw new Error('SERVER_ERROR_' + res.status);
+
+    const data = await res.json();
+    if(data?.error) throw new Error(data.error.message || 'API error');
+
+    const enhanced = data?.choices?.[0]?.message?.content?.trim();
+    if(!enhanced || enhanced.length < 40) throw new Error('WEAK_RESPONSE');
+
+    await navigator.clipboard.writeText(enhanced);
+
+    statusEl.style.background = '#f0fdf4';
+    statusEl.style.borderColor = '#a7f3d0';
+    statusEl.style.color = '#065f46';
+    statusEl.textContent = '✅ Enhanced prompt copied to clipboard! Paste it directly into ' + toolName + '.';
+
+    btn.disabled    = false;
+    btn.textContent = '✨ Enhance & Copy';
+
+    setTimeout(()=>{
+      statusEl.style.display = 'none';
+      statusEl.style.background = '';
+      statusEl.style.borderColor = '';
+      statusEl.style.color = '';
+    }, 5000);
+
+  }catch(err){
+    console.error('enhanceVideoPrompt error:', err);
+    statusEl.style.background = '#fef2f2';
+    statusEl.style.borderColor = '#fecaca';
+    statusEl.style.color = '#991b1b';
+    statusEl.textContent = '⚠️ AI is busy right now. Your raw prompt was not enhanced — click "📋 Copy Prompt" to copy the standard version instead.';
+    btn.disabled    = false;
+    btn.textContent = '✨ Enhance & Copy';
+  }
+}
+
 
 function clearVideoBuilder(e){
 
