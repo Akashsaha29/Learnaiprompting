@@ -1,7 +1,7 @@
 /*!
  * AI Design Mastery — 45-Day AI Prompt & Design Course
  * Copyright © 2025 Akash Saha. All rights reserved.
- * Website : https://aidesignmastery.in
+ * Website : https://akashsaha29.github.io
  *
  * Unauthorised copying, modification, distribution or use of this
  * software without prior written permission is strictly prohibited.
@@ -874,60 +874,97 @@ async function enhanceVideoPrompt(e){
     return;
   }
 
-  const btn       = document.getElementById('vb-enhance-btn');
-  const statusEl  = document.getElementById('vb-enhance-status');
+  const btn      = document.getElementById('vb-enhance-btn');
+  const statusEl = document.getElementById('vb-enhance-status');
   const rawPrompt = buildVideoPrompt(scene, endpoint, s);
   const toolName  = { kling:'Kling 2.6', runway:'Runway Gen-4.5', veo:'Veo 3.1' }[vbTool] || 'Kling 2.6';
 
-  btn.disabled     = true;
-  btn.textContent  = '⏳ Enhancing...';
+  btn.disabled          = true;
+  btn.textContent       = '⏳ Enhancing...';
   statusEl.style.display = 'block';
-  statusEl.textContent   = 'AI is rewriting your prompt as a professional video brief...';
+  statusEl.style.background   = '#f5f3ff';
+  statusEl.style.borderColor  = '#ddd6fe';
+  statusEl.style.color        = '#5b21b6';
+  statusEl.textContent  = 'AI is rewriting your prompt as a professional video brief...';
 
   try{
-    const res = await fetch('https://ai-proxy.akashsaha-rock666.workers.dev', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        messages: [
-          {
-            role: 'system',
-            content: `You are a world-class video director and AI prompt engineer specialising in ${toolName}.
 
-Your job: take the structured video prompt below and rewrite it as ONE single cohesive professional video production brief written in flowing prose — the way a real film director or commercial production house would brief a video AI tool.
+    // ✅ Use aiCall() — same as Prompt Fixer and all other AI features
+    // This handles auth token, session refresh, and correct headers automatically
+    const data = await aiCall({
+      model: 'openrouter/auto',
+      messages: [
+        {
+          role: 'system',
+          content: `You are a senior ${toolName} prompt engineer at a top-tier commercial video production studio. You have directed hundreds of AI video campaigns for luxury brands, automotive clients, and global advertising agencies.
 
-RULES:
-- Write as one continuous paragraph or 2-3 short focused paragraphs — NO bullet points, NO labels like "Camera:", "Motion:" etc.
-- Preserve every technical detail from the input — do not remove physics, material, lens, lighting, colour grade, or audio details
-- Make it read naturally and cinematically — like a director briefing a DP
-- Keep all negative prompt instructions at the end after "--neg"
-- Do not add any explanation or preamble — output ONLY the final prompt
-- Start with "// ${toolName} prompt" on its own line, then the prompt
+You will receive a structured video prompt. Your job is to rewrite it as a FINAL PRODUCTION-READY ${toolName} prompt — the kind that goes directly into the AI video tool and produces the highest quality output possible.
 
-INPUT PROMPT:
+HOW PROFESSIONAL ${toolName} PROMPTS ARE STRUCTURED:
+
+SECTION 1 — OPENING SHOT DESCRIPTION (2-3 sentences)
+Write exactly what the camera sees in the first frame. Be hyper-specific:
+- Exact subject with material, colour, texture, condition
+- Exact environment with surface, depth, atmosphere
+- Time of day or light source
+
+SECTION 2 — CAMERA BEHAVIOUR (1-2 sentences)
+Describe the camera move using cinematographer language:
+- Speed: slow / medium / fast
+- Move type: dolly / arc / static / handheld / crane
+- What the move reveals or emphasises
+- Focal length behaviour (compression, depth of field change)
+
+SECTION 3 — MOTION & PHYSICS (1-2 sentences)
+Describe what physically moves in the frame:
+- How it moves (weight, speed, direction)
+- Physical properties (fluid dynamics, material flex, particle behaviour)
+- End state if applicable
+
+SECTION 4 — LIGHT & COLOUR (1 sentence)
+Describe the complete lighting setup and post-production grade:
+- Light source, direction, quality (hard/soft), colour temperature
+- Shadow depth and fill ratio
+- Colour grade or LUT reference
+
+SECTION 5 — MOOD, STYLE & AUDIO (1 sentence)
+The overall cinematic feeling and sound design:
+- Director reference or brand aesthetic
+- Emotional tone
+- Audio — music genre or SFX description
+
+SECTION 6 — TECHNICAL SPECS (1 line)
+Format: [duration], [aspect ratio], [frame quality], [render style]
+
+NEGATIVE PROMPT (final line)
+Format: --neg [specific things to avoid for this tool]
+
+OUTPUT RULES:
+- Output ONLY the final prompt — no explanation, no preamble, no headers, no section labels
+- Write in continuous flowing sentences — read like a film brief, not a list
+- Every single detail from the input prompt MUST be preserved and elevated
+- Add professional production vocabulary the AI model responds to strongly
+- The output must feel like it was written by someone who has shipped 100+ AI video ads
+- Start your output with: // ${toolName} — Enhanced Production Prompt
+
+INPUT PROMPT TO ENHANCE:
 ${rawPrompt}`
-          },
-          {
-            role: 'user',
-            content: 'Rewrite this as a professional cinematic video prompt now.'
-          }
-        ]
-      })
+        },
+        {
+          role: 'user',
+          content: 'Write the final enhanced production prompt for this video now. Output only the prompt — nothing else.'
+        }
+      ]
     });
-
-    if(!res.ok) throw new Error('SERVER_ERROR_' + res.status);
-
-    const data = await res.json();
-    if(data?.error) throw new Error(data.error.message || 'API error');
 
     const enhanced = data?.choices?.[0]?.message?.content?.trim();
     if(!enhanced || enhanced.length < 40) throw new Error('WEAK_RESPONSE');
 
     await navigator.clipboard.writeText(enhanced);
 
-    statusEl.style.background = '#f0fdf4';
+    statusEl.style.background  = '#f0fdf4';
     statusEl.style.borderColor = '#a7f3d0';
-    statusEl.style.color = '#065f46';
+    statusEl.style.color       = '#065f46';
     statusEl.textContent = '✅ Enhanced prompt copied to clipboard! Paste it directly into ' + toolName + '.';
 
     btn.disabled    = false;
@@ -935,17 +972,21 @@ ${rawPrompt}`
 
     setTimeout(()=>{
       statusEl.style.display = 'none';
-      statusEl.style.background = '';
-      statusEl.style.borderColor = '';
-      statusEl.style.color = '';
     }, 5000);
 
   }catch(err){
-    console.error('enhanceVideoPrompt error:', err);
-    statusEl.style.background = '#fef2f2';
+    console.error('enhanceVideoPrompt error:', err.message);
+
+    statusEl.style.background  = '#fef2f2';
     statusEl.style.borderColor = '#fecaca';
-    statusEl.style.color = '#991b1b';
-    statusEl.textContent = '⚠️ AI is busy right now. Your raw prompt was not enhanced — click "📋 Copy Prompt" to copy the standard version instead.';
+    statusEl.style.color       = '#991b1b';
+
+    if(err.message === 'Not authenticated' || err.message === 'Session expired'){
+      statusEl.textContent = '🔐 Session expired. Please log in again.';
+    } else {
+      statusEl.textContent = '⚠️ AI is busy right now. Click "📋 Copy Prompt" to copy the standard version instead.';
+    }
+
     btn.disabled    = false;
     btn.textContent = '✨ Enhance & Copy';
   }
